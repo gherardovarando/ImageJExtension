@@ -49,11 +49,18 @@ const {
 } = require(path.join(__dirname, 'src', 'ImageJTasks'));
 const ImageJUtil = require(path.join(__dirname, 'src', 'ImageJUtil'));
 
+/**
+ * ImageJ Atlas extension.
+ */
 class ImageJExtension extends GuiExtension {
 
+    /**
+     * Creates an instance of the extension.
+     * A menu with all capabilities is defined.
+     */
     constructor() {
         super({
-            image: path.join(__dirname, "res", "img", "imagej-logo.gif"),
+            image: path.join(__dirname, "res", "img", "imagej-logo.gif"), // not working
             menuLabel: 'ImageJ',
             menuTemplate: [{
                 label: 'Launch ImageJ',
@@ -147,168 +154,39 @@ class ImageJExtension extends GuiExtension {
         this.memory = this.maxMemory;
         this.stackMemory = this.maxStackMemory;
         this.image = path.join(__dirname, "res", "img", "imagej-logo.gif");
-        this.imagejpath = path.join(__dirname, "res", "ImageJ"); // May not work because last slash
-        //`${__dirname}${path.sep}_resources${path.sep}ImageJ${path.sep}`;
+        this.imagejpath = path.join(__dirname, "res", "ImageJ");
     }
 
+    /**
+     * Activates the extension.
+     */
     activate() {
         this.pane = new ToggleElement(document.createElement('DIV'));
         this.pane.element.className = 'pane';
         this.pane.show();
         this.element.appendChild(this.pane.element);
         this.appendMenu();
-       // this.createMenu();
         super.activate();
     }
 
-    createMenu() {
-        let menu = new Menu();
-        menu.append(new MenuItem({
-            label: 'Launch ImageJ',
-            type: 'normal',
-            click: () => {
-                this.launchImageJ();
-            }
-        }));
-        menu.append(new MenuItem({
-            label: 'Config ImageJ',
-            type: 'normal',
-            click: () => {
-                this.configImageJ();
-            }
-        }));
-
-        let mapToolsSubMenu = new Menu();
-        mapToolsSubMenu.append(new MenuItem({
-            label: "Create map from image",
-            type: "normal",
-            click: () => {
-                this.createMap(true, false);
-            }
-        }));
-
-        mapToolsSubMenu.append(new MenuItem({
-            label: "Create map from folder",
-            type: "normal",
-            click: () => {
-                this.createMap(true, true);
-            }
-        }));
-
-        mapToolsSubMenu.append(new MenuItem({
-            label: "Create layer from image",
-            type: "normal",
-            click: () => {
-                this.createMap(false, false);
-            }
-        }));
-
-        mapToolsSubMenu.append(new MenuItem({
-            label: "Create layer from folder",
-            type: "normal",
-            click: () => {
-                this.createMap(false, true);
-            }
-        }));
-
-        menu.append(new MenuItem({
-            label: "Map Tools",
-            submenu: mapToolsSubMenu
-        }));
-
-        let objDetectionSubmenu = new Menu();
-        objDetectionSubmenu.append(new MenuItem({
-            label: "Single image",
-            type: "normal",
-            click: () => {
-                this.objectDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
-            }
-        }));
-
-        objDetectionSubmenu.append(new MenuItem({
-            label: "Folder",
-            type: "normal",
-            click: () => {
-                this.objectDetection(ImageJUtil.LayersMode.FOLDER);
-            }
-        }));
-
-        objDetectionSubmenu.append(new MenuItem({
-            label: "Image list",
-            type: "normal",
-            click: () => {
-                this.objectDetection(ImageJUtil.LayersMode.IMAGE_LIST);
-            }
-        }));
-
-        menu.append(new MenuItem({
-            label: "Object detection",
-            submenu: objDetectionSubmenu
-        }));
-
-        let holesDetectionSubmenu = new Menu();
-        holesDetectionSubmenu.append(new MenuItem({
-            label: "Single image",
-            type: "normal",
-            click: () => {
-                this.holesDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
-            }
-        }));
-
-        holesDetectionSubmenu.append(new MenuItem({
-            label: "Folder",
-            type: "normal",
-            click: () => {
-                this.holesDetection(ImageJUtil.LayersMode.FOLDER);
-            }
-        }));
-
-        holesDetectionSubmenu.append(new MenuItem({
-            label: "Image list",
-            type: "normal",
-            click: () => {
-                this.holesDetection(ImageJUtil.LayersMode.IMAGE_LIST);
-            }
-        }));
-
-        menu.append(new MenuItem({
-            label: "Holes detection",
-            submenu: holesDetectionSubmenu
-        }));
-
-
-        let toolsMenu = new Menu();
-
-        toolsMenu.append(new MenuItem({
-            label: 'Create mosaic',
-            type: 'normal',
-            click: () => {
-                this.cropImage();
-            }
-        }));
-
-        menu.append(new MenuItem({
-            label: "Tools",
-            submenu: toolsMenu
-        }));
-
-        this.menu = new MenuItem({
-            label: "Imagej",
-            type: "submenu",
-            submenu: menu
-        });
-        gui.addMenuItem(this.menu);
-    }
-
+    /**
+     * Deactivates the extension.
+     */
     deactivate() {
         gui.removeMenuItem(this.menu);
         this.element.removeChild(this.pane.element);
     }
 
+    /**
+     * Shows the extension.
+     */
     show() {
         super.show();
     }
 
+    /**
+     * Launchs a ImageJ instance with configured memory parameters.
+     */
     launchImageJ() {
         let childProcess = spawn('java', [`-Xmx${this.memory}m`, `-Xss${this.stackMemory}m`, `-jar`, `ij.jar`], {
             cwd: this.imagejpath,
@@ -326,13 +204,24 @@ class ImageJExtension extends GuiExtension {
         });
     }
 
-
+    /**
+     * Runs an ImageJ macro stored inside Atlas folder located in ImageJ macros folder.
+     * @param {string} macro Name of the macro to run.
+     * @param {string} args Arguments needed by the macro. 
+     */
     run(macro, args) {
         return spawn('java', [`-Xmx${this.memory}m`, `-Xss${this.stackMemory}m`, `-jar`, `ij.jar`, `-batchpath`, `Atlas${path.sep}${macro}.ijm`, `${args}`], {
             cwd: this.imagejpath
         });
     }
 
+    /**
+     * Opens a dialog asking for a file or folder as source for creating a map or a layer.
+     * @param {boolean} isMap If true, we want to create a map, otherwise we want a layer.
+     * @param {boolean} isFolder If true, all files of the folder will be used, the user
+     * has to choose the image in the left upper corner. Otherwise only selected image will
+     * be used.
+     */
     createMap(isMap, isFolder) {
         let title = 'Choose image';
         if (isFolder) {
@@ -357,6 +246,12 @@ class ImageJExtension extends GuiExtension {
         });
     }
 
+    /**
+     * Opens a dialog asking for a file or folder as source for performing an
+     * object detection task.
+     * @param {ImageJUtil.LayersMode} mode Object detection mode, can be single image,
+     * folder, or list of images. 
+     */
     objectDetection(mode) {
         let props = ['openFile'];
         if (mode === ImageJUtil.LayersMode.FOLDER) {
@@ -385,6 +280,12 @@ class ImageJExtension extends GuiExtension {
         });
     }
 
+    /**
+     * Opens a dialog asking for a file or folder as source for performing a
+     * holes detection task.
+     * @param {ImageJUtil.LayersMode} mode Holes detection mode, can be single image,
+     * folder, or list of images. 
+     */
     holesDetection(mode) {
         let props = ['openFile'];
         if (mode === ImageJUtil.LayersMode.FOLDER) {
@@ -413,6 +314,9 @@ class ImageJExtension extends GuiExtension {
         });
     }
 
+    /**
+     * Opens a dialog asking for a file (image) to crop it into small parts.
+     */
     cropImage() {
         dialog.showOpenDialog({
             title: 'Crop Big Image',
@@ -431,6 +335,9 @@ class ImageJExtension extends GuiExtension {
         );
     }
 
+    /**
+     * Opens a modal window for ImageJ memory parameters modification.
+     */
     configImageJ() {
         let conf = util.clone({
             memory: this.memory,
