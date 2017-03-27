@@ -46,12 +46,14 @@ const {
     ObjectDetectionTask,
     HolesDetectionTask,
     CropTask
-} = require('./src/ImageJTasks');
+} = require(path.join(__dirname, 'src', 'ImageJTasks'));
+const ImageJUtil = require(path.join(__dirname, 'src', 'ImageJUtil'));
 
 class ImageJExtension extends GuiExtension {
 
     constructor() {
         super({
+            image: path.join(__dirname, "res", "img", "imagej-logo.gif"),
             menuLabel: 'ImageJ',
             menuTemplate: [{
                 label: 'Launch ImageJ',
@@ -94,17 +96,17 @@ class ImageJExtension extends GuiExtension {
                     {
                         label: "Single image",
                         click: () => {
-                            this.objectDetection(util.Layers.Mode.SINGLE_IMAGE);
+                            this.objectDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
                         }
                     }, {
                         label: "Folder",
                         click: () => {
-                            this.objectDetection(util.Layers.Mode.FOLDER);
+                            this.objectDetection(ImageJUtil.LayersMode.FOLDER);
                         }
                     }, {
                         label: "Image list",
                         click: () => {
-                            this.objectDetection(util.Layers.Mode.IMAGE_LIST);
+                            this.objectDetection(ImageJUtil.LayersMode.IMAGE_LIST);
                         }
                     }
                 ]
@@ -114,17 +116,17 @@ class ImageJExtension extends GuiExtension {
                     {
                         label: "Single image",
                         click: () => {
-                            this.holestDetection(util.Layers.Mode.SINGLE_IMAGE);
+                            this.holestDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
                         }
                     }, {
                         label: "Folder",
                         click: () => {
-                            this.holesDetection(util.Layers.Mode.FOLDER);
+                            this.holesDetection(ImageJUtil.LayersMode.FOLDER);
                         }
                     }, {
                         label: "Image list",
                         click: () => {
-                            this.holesDetection(util.Layers.Mode.IMAGE_LIST);
+                            this.holesDetection(ImageJUtil.LayersMode.IMAGE_LIST);
                         }
                     }
                 ]
@@ -219,7 +221,7 @@ class ImageJExtension extends GuiExtension {
             label: "Single image",
             type: "normal",
             click: () => {
-                this.objectDetection(util.Layers.Mode.SINGLE_IMAGE);
+                this.objectDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
             }
         }));
 
@@ -227,7 +229,7 @@ class ImageJExtension extends GuiExtension {
             label: "Folder",
             type: "normal",
             click: () => {
-                this.objectDetection(util.Layers.Mode.FOLDER);
+                this.objectDetection(ImageJUtil.LayersMode.FOLDER);
             }
         }));
 
@@ -235,7 +237,7 @@ class ImageJExtension extends GuiExtension {
             label: "Image list",
             type: "normal",
             click: () => {
-                this.objectDetection(util.Layers.Mode.IMAGE_LIST);
+                this.objectDetection(ImageJUtil.LayersMode.IMAGE_LIST);
             }
         }));
 
@@ -249,7 +251,7 @@ class ImageJExtension extends GuiExtension {
             label: "Single image",
             type: "normal",
             click: () => {
-                this.holesDetection(util.Layers.Mode.SINGLE_IMAGE);
+                this.holesDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
             }
         }));
 
@@ -257,7 +259,7 @@ class ImageJExtension extends GuiExtension {
             label: "Folder",
             type: "normal",
             click: () => {
-                this.holesDetection(util.Layers.Mode.FOLDER);
+                this.holesDetection(ImageJUtil.LayersMode.FOLDER);
             }
         }));
 
@@ -265,7 +267,7 @@ class ImageJExtension extends GuiExtension {
             label: "Image list",
             type: "normal",
             click: () => {
-                this.holesDetection(util.Layers.Mode.IMAGE_LIST);
+                this.holesDetection(ImageJUtil.LayersMode.IMAGE_LIST);
             }
         }));
 
@@ -357,7 +359,7 @@ class ImageJExtension extends GuiExtension {
 
     objectDetection(mode) {
         let props = ['openFile'];
-        if (mode === util.Layers.Mode.FOLDER) {
+        if (mode === ImageJUtil.LayersMode.FOLDER) {
             props = ['openDirectory'];
         }
         dialog.showOpenDialog({
@@ -367,7 +369,7 @@ class ImageJExtension extends GuiExtension {
         }, (filepaths) => {
             if (filepaths) {
                 let details;
-                if (mode === util.Layers.Mode.FOLDER) {
+                if (mode === ImageJUtil.LayersMode.FOLDER) {
                     details = `Folder: ${path.basename(filepaths[0])}`;
                 } else {
                     if (path.extname(filepaths[0]) === "txt") {
@@ -385,7 +387,7 @@ class ImageJExtension extends GuiExtension {
 
     holesDetection(mode) {
         let props = ['openFile'];
-        if (mode === util.Layers.Mode.FOLDER) {
+        if (mode === ImageJUtil.LayersMode.FOLDER) {
             props = ['openDirectory'];
         }
         dialog.showOpenDialog({
@@ -395,7 +397,7 @@ class ImageJExtension extends GuiExtension {
         }, (filepaths) => {
             if (filepaths) {
                 let details;
-                if (mode === util.Layers.Mode.FOLDER) {
+                if (mode === ImageJUtil.LayersMode.FOLDER) {
                     details = `Folder: ${path.basename(filepaths[0])}`;
                 } else {
                     if (path.extname(filepaths[0]) === "txt") {

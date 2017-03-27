@@ -34,6 +34,7 @@ const ChildProcess = require('child_process').ChildProcess;
 const {
     dialog
 } = require('electron').remote;
+const ImageJUtil = require(path.join('..', 'ImageJUtil'));
 
 class MapCreatorTask extends Task {
 
@@ -128,7 +129,7 @@ class MapCreatorTask extends Task {
     }
 
     showModal(imagePath, next) {
-        let numSlices = util.Image.getTotalSlices(imagePath);
+        let numSlices = ImageJUtil.Image.getTotalSlices(imagePath);
 
         var modal = new Modal({
             title: "Map creator options",

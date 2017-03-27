@@ -34,7 +34,7 @@ const ChildProcess = require('child_process').ChildProcess;
 const {
     dialog
 } = require('electron').remote;
-
+const ImageJUtil = require(path.join('..', 'ImageJUtil'));
 
 class HolesDetectionTask extends Task {
 
@@ -73,7 +73,7 @@ class HolesDetectionTask extends Task {
                 let promise = new Promise((resolve) => {
                     let notification;
                     if (code == 0) {
-                        util.Layers.createJSONConfiguration(runPath, params.path, this.mode, layerType, (config) => {
+                        ImageJUtil.createJSONConfiguration(runPath, params.path, this.mode, layerType, (config) => {
                             let jsonPath = `${params.path}${path.sep}holes_pixels${path.sep}${config.name}.json`;
                             fs.writeFile(jsonPath, JSON.stringify(config, null, 2), (err) => {
                                 if (err) {
