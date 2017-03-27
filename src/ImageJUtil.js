@@ -23,8 +23,21 @@ const path = require('path');
 const os = require('os');
 const Tiff = require(path.join(__dirname, 'lib', 'Tiff'));
 
+/**
+ * ImageJ extension utilities.
+ */
 class ImageJUtil {
 
+    /**
+     * Creates a JSON configuration file for a layer (pixels layer or points layer).
+     *
+     * @static
+     * @param {string} sourcePath - Path with source files to create JSON configuration.
+     * @param {string} destinationPath - Path where JSON configuration file will be saved.
+     * @param {Util.Layers.Mode} mode - JSON configuration mode (folder / single image / image list).
+     * @param {string} layerType - Layer type, points (objects) or pixels (holes).
+     * @param {function(string)} next - Callback for returning JSON Configuration file path.
+     */
     static createJSONConfiguration(sourcePath, destinationPath, mode, layerType, next) {
         let template;
 
@@ -147,14 +160,27 @@ class ImageJUtil {
 
 }
 
+/**
+ * JSON Configuration creation modes.
+ */
 ImageJUtil.LayersMode = {
     SINGLE_IMAGE: 0,
     FOLDER: 1,
     IMAGE_LIST: 2
 }
 
+/**
+ * Image Utilities.
+ */
 ImageJUtil.Image = class {
 
+    /**
+     * Calculates slice number of an image.
+     *
+     * @static
+     * @param {string} imagePath - Source image path.
+     * @returns {number} Number of slices.
+     */
     static getTotalSlices(imagePath) {
         if (imagePath.endsWith(".tif") || imagePath.endsWith(".tiff")) {
             let data = fs.readFileSync(imagePath);
@@ -168,6 +194,13 @@ ImageJUtil.Image = class {
         }
     }
 
+    /**
+     * Calculates size (width and height) of an image.
+     *
+     * @static
+     * @param {string} imagePath - Source image path.
+     * @param {function(string, number, number)} next - Callback for returning image dimensions (or error).
+     */
     static getSize(imagePath, next) {
         if (imagePath.endsWith(".tif") || imagePath.endsWith(".tiff")) {
             fs.readFile(imagePath, (err, data) => {
