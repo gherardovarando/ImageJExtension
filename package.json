@@ -1,0 +1,30 @@
+{
+  "name": "imagejextension",
+  "version": "0.0.1",
+  "description": "ImageJ Extension for Atlas app",
+  "main": "ImageJExtension.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjuez/ImageJExtension.git"
+  },
+  "keywords": [
+    "imagej",
+    "atlas",
+    "cig",
+    "hbp"
+  ],
+  "author": "Mario Juez",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/mjuez/ImageJExtension/issues"
+  },
+  "homepage": "https://github.com/mjuez/ImageJExtension#readme",
+  "dependencies": {
+    "electron": "^1.6.2",
+    "electrongui": "github:gherardovarando/electrongui",
+    "sanitize-filename": "^1.6.1"
+  }
+}
