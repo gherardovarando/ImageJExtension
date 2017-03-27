@@ -23,10 +23,10 @@ const path = require('path');
 const {
     Task,
     Modal,
-    Input,
     Grid,
     FolderSelector,
     ButtonsContainer,
+    input,
     util,
     gui
 } = require('electrongui');
@@ -139,7 +139,7 @@ class ObjectDetectionTask extends Task {
         let body = document.createElement("DIV");
         let grid = new Grid(9, 2);
 
-        let numRMin = Input.input({
+        let numRMin = input.input({
             type: "number",
             id: "numrmin",
             value: "1",
@@ -152,7 +152,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblRMin, 0, 0);
         grid.addElement(numRMin, 0, 1);
 
-        let numRMax = Input.input({
+        let numRMax = input.input({
             type: "number",
             id: "numrmax",
             value: "5",
@@ -165,7 +165,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblRMax, 1, 0);
         grid.addElement(numRMax, 1, 1);
 
-        let numBy = Input.input({
+        let numBy = input.input({
             type: "number",
             id: "numby",
             value: "1",
@@ -177,7 +177,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblBy, 2, 0);
         grid.addElement(numBy, 2, 1);
 
-        let selThrMethod = Input.selectInput({
+        let selThrMethod = input.selectInput({
             label: "Threshold method",
             choices: [
                 "Default",
@@ -206,7 +206,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblThrMethod, 3, 0);
         grid.addElement(selThrMethod, 3, 1);
 
-        let numMin = Input.input({
+        let numMin = input.input({
             type: "number",
             id: "nummin",
             value: "1",
@@ -218,7 +218,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblMin, 4, 0);
         grid.addElement(numMin, 4, 1);
 
-        let numMax = Input.input({
+        let numMax = input.input({
             type: "number",
             id: "nummax",
             value: "-1",
@@ -230,7 +230,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblMax, 5, 0);
         grid.addElement(numMax, 5, 1);
 
-        let numFraction = Input.input({
+        let numFraction = input.input({
             type: "number",
             id: "numfraction",
             value: "0.500",
@@ -244,7 +244,7 @@ class ObjectDetectionTask extends Task {
         grid.addElement(lblFraction, 6, 0);
         grid.addElement(numFraction, 6, 1);
 
-        let numToll = Input.input({
+        let numToll = input.input({
             type: "number",
             id: "numtoll",
             value: "0",

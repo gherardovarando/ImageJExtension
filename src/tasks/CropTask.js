@@ -25,10 +25,10 @@ const path = require('path');
 const {
     Task,
     Modal,
-    Input,
     Grid,
     FolderSelector,
     ButtonsContainer,
+    input,
     util,
     gui
 } = require('electrongui');
@@ -117,7 +117,7 @@ class CropTask extends Task {
         let body = document.createElement("DIV");
         let grid = new Grid(6, 2);
 
-        let numDimTile = Input.input({
+        let numDimTile = input.input({
             type: "number",
             id: "numdimtile",
             value: "10",
@@ -130,7 +130,7 @@ class CropTask extends Task {
         grid.addElement(lblDimTile, 0, 0);
         grid.addElement(numDimTile, 0, 1);
 
-        let numHeight = Input.input({
+        let numHeight = input.input({
             type: "number",
             id: "numheight",
             value: "10",
@@ -142,7 +142,7 @@ class CropTask extends Task {
         grid.addElement(lblHeight, 1, 0);
         grid.addElement(numHeight, 1, 1);
 
-        let numWidth = Input.input({
+        let numWidth = input.input({
             type: "number",
             id: "numwidth",
             value: "10",
@@ -154,7 +154,7 @@ class CropTask extends Task {
         grid.addElement(lblWidth, 2, 0);
         grid.addElement(numWidth, 2, 1);
 
-        let numx = Input.input({
+        let numx = input.input({
             type: "number",
             id: "numx",
             label: "X0",
@@ -168,7 +168,7 @@ class CropTask extends Task {
         grid.addElement(lblx, 3, 0);
         grid.addElement(numx, 3, 1);
 
-        let numy = Input.input({
+        let numy = input.input({
             type: "number",
             id: "numy",
             value: "0",

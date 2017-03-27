@@ -1,30 +1,92 @@
 {
-  "name": "imagejextension",
-  "version": "0.0.1",
+  "_args": [
+    [
+      {
+        "raw": "github:mjuez/ImageJExtension",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "github:mjuez/ImageJExtension",
+        "spec": "github:mjuez/ImageJExtension",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:mjuez/ImageJExtension.git",
+          "sshUrl": "git+ssh://git@github.com/mjuez/ImageJExtension.git",
+          "httpsUrl": "git+https://github.com/mjuez/ImageJExtension.git",
+          "gitUrl": "git://github.com/mjuez/ImageJExtension.git",
+          "shortcut": "github:mjuez/ImageJExtension",
+          "directUrl": "https://raw.githubusercontent.com/mjuez/ImageJExtension/master/package.json"
+        }
+      },
+      "/mnt/01CD4E0620D961E0/HBP/Atlas/mario/Atlas/app"
+    ]
+  ],
+  "_from": "mjuez/ImageJExtension",
+  "_id": "imagejextension@0.0.1",
+  "_inCache": true,
+  "_location": "/imagejextension",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "github:mjuez/ImageJExtension",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "github:mjuez/ImageJExtension",
+    "spec": "github:mjuez/ImageJExtension",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:mjuez/ImageJExtension.git",
+      "sshUrl": "git+ssh://git@github.com/mjuez/ImageJExtension.git",
+      "httpsUrl": "git+https://github.com/mjuez/ImageJExtension.git",
+      "gitUrl": "git://github.com/mjuez/ImageJExtension.git",
+      "shortcut": "github:mjuez/ImageJExtension",
+      "directUrl": "https://raw.githubusercontent.com/mjuez/ImageJExtension/master/package.json"
+    }
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git://github.com/mjuez/ImageJExtension.git#330efe7bc75afb045fccf7cedb0022bb45ae3fe4",
+  "_shasum": "997bde6ffd9d8ff6b6f6518347c3b7825fcb6e3a",
+  "_shrinkwrap": null,
+  "_spec": "github:mjuez/ImageJExtension",
+  "_where": "/mnt/01CD4E0620D961E0/HBP/Atlas/mario/Atlas/app",
+  "author": {
+    "name": "Mario Juez"
+  },
+  "bugs": {
+    "url": "https://github.com/mjuez/ImageJExtension/issues"
+  },
+  "dependencies": {
+    "electron": "^1.6.2",
+    "electrongui": "github:gherardovarando/electrongui",
+    "sanitize-filename": "^1.6.1"
+  },
   "description": "ImageJ Extension for Atlas app",
-  "main": "ImageJExtension.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mjuez/ImageJExtension.git"
-  },
+  "devDependencies": {},
+  "gitHead": "330efe7bc75afb045fccf7cedb0022bb45ae3fe4",
+  "homepage": "https://github.com/mjuez/ImageJExtension#readme",
   "keywords": [
     "imagej",
     "atlas",
     "cig",
     "hbp"
   ],
-  "author": "Mario Juez",
   "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/mjuez/ImageJExtension/issues"
+  "main": "ImageJExtension.js",
+  "name": "imagejextension",
+  "optionalDependencies": {},
+  "readme": "# ImageJExtension\nImageJ Extension for Atlas app\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjuez/ImageJExtension.git"
   },
-  "homepage": "https://github.com/mjuez/ImageJExtension#readme",
-  "dependencies": {
-    "electron": "^1.6.2",
-    "electrongui": "github:gherardovarando/electrongui",
-    "sanitize-filename": "^1.6.1"
-  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.1"
 }

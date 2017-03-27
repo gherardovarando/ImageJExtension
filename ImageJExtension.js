@@ -27,7 +27,7 @@ const {
     FolderSelector,
     ButtonsContainer,
     TaskManager,
-    Input,
+    input,
     util,
     gui
 } = require('electrongui');
@@ -51,13 +51,101 @@ const {
 class ImageJExtension extends GuiExtension {
 
     constructor() {
-        super();
+        super({
+            menuLabel: 'ImageJ',
+            menuTemplate: [{
+                label: 'Launch ImageJ',
+                click: () => {
+                    this.launchImageJ();
+                }
+            }, {
+                label: 'Configure ImageJ',
+                click: () => {
+                    this.configImageJ();
+                }
+            }, {
+                label: 'Map Tools',
+                submenu: [
+                    {
+                        label: "Create map from image",
+                        click: () => {
+                            this.createMap(true, false);
+                        }
+                    }, {
+                        label: "Create map from folder",
+                        click: () => {
+                            this.createMap(true, true);
+                        }
+                    }, {
+                        label: "Create layer from image",
+                        click: () => {
+                            this.createMap(false, false);
+                        }
+                    }, {
+                        label: "Create layer from folder",
+                        click: () => {
+                            this.createMap(false, true);
+                        }
+                    }
+                ]
+            }, {
+                label: 'Object Detection',
+                submenu: [
+                    {
+                        label: "Single image",
+                        click: () => {
+                            this.objectDetection(util.Layers.Mode.SINGLE_IMAGE);
+                        }
+                    }, {
+                        label: "Folder",
+                        click: () => {
+                            this.objectDetection(util.Layers.Mode.FOLDER);
+                        }
+                    }, {
+                        label: "Image list",
+                        click: () => {
+                            this.objectDetection(util.Layers.Mode.IMAGE_LIST);
+                        }
+                    }
+                ]
+            }, {
+                label: 'Holes Detection',
+                submenu: [
+                    {
+                        label: "Single image",
+                        click: () => {
+                            this.holestDetection(util.Layers.Mode.SINGLE_IMAGE);
+                        }
+                    }, {
+                        label: "Folder",
+                        click: () => {
+                            this.holesDetection(util.Layers.Mode.FOLDER);
+                        }
+                    }, {
+                        label: "Image list",
+                        click: () => {
+                            this.holesDetection(util.Layers.Mode.IMAGE_LIST);
+                        }
+                    }
+                ]
+            }, {
+                label: 'Tools',
+                submenu: [
+                    {
+                        label: "Create mosaic",
+                        click: () => {
+                            this.cropImage();
+                        }
+                    }
+                ]
+            }]
+        });
         this.maxMemory = parseInt((os.totalmem() * 0.7) / 1000000);
         this.maxStackMemory = 515;
         this.memory = this.maxMemory;
         this.stackMemory = this.maxStackMemory;
         this.image = path.join(__dirname, "res", "img", "imagej-logo.gif");
-        this.imagejpath = path.join(__dirname, "res", "ImageJ", "imagej-logo.gif"); // May not work because last slash
+        this.imagejpath = path.join(__dirname, "res", "ImageJ"); // May not work because last slash
         //`${__dirname}${path.sep}_resources${path.sep}ImageJ${path.sep}`;
     }
 
@@ -66,13 +154,9 @@ class ImageJExtension extends GuiExtension {
         this.pane.element.className = 'pane';
         this.pane.show();
         this.element.appendChild(this.pane.element);
-        this.createMenu();
+        this.appendMenu();
+       // this.createMenu();
         super.activate();
-    }
-
-    deactivate() {
-        gui.removeSubmenu(this.menu);
-        this.element.removeChild(this.pane.element);
     }
 
     createMenu() {
@@ -211,7 +295,12 @@ class ImageJExtension extends GuiExtension {
             type: "submenu",
             submenu: menu
         });
-        gui.addSubMenu(this.menu);
+        gui.addMenuItem(this.menu);
+    }
+
+    deactivate() {
+        gui.removeMenuItem(this.menu);
+        this.element.removeChild(this.pane.element);
     }
 
     show() {
@@ -354,7 +443,7 @@ class ImageJExtension extends GuiExtension {
         body.className = 'flex-container';
         let div = document.createElement('DIV');
         body.appendChild(div);
-        Input.input({
+        input.input({
             parent: div,
             label: 'Memory (MB)',
             className: 'simple form-control',
@@ -369,7 +458,7 @@ class ImageJExtension extends GuiExtension {
                 inp.value = conf.memory;
             }
         });
-        Input.input({
+        input.input({
             parent: div,
             label: 'Stack memory (MB)',
             className: 'simple form-control',

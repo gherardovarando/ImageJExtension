@@ -23,10 +23,10 @@ const path = require('path');
 const {
     Task,
     Modal,
-    Input,
     Grid,
     FolderSelector,
     ButtonsContainer,
+    input,
     util,
     gui
 } = require('electrongui');
@@ -147,7 +147,7 @@ class MapCreatorTask extends Task {
         stackFieldSet.appendChild(stackLegend);
 
         let stackGrid = new Grid(3, 2);
-        let numInitialSlice = Input.input({
+        let numInitialSlice = input.input({
             type: "number",
             id: "numinitialslice",
             value: "1",
@@ -160,7 +160,7 @@ class MapCreatorTask extends Task {
         stackGrid.addElement(lblInitialSlice, 0, 0);
         stackGrid.addElement(numInitialSlice, 0, 1);
 
-        let numLastSlice = Input.input({
+        let numLastSlice = input.input({
             type: "number",
             id: "numlastslice",
             value: "1",
@@ -173,7 +173,7 @@ class MapCreatorTask extends Task {
         stackGrid.addElement(lblLastSlice, 1, 0);
         stackGrid.addElement(numLastSlice, 1, 1);
 
-        let numScale = Input.input({
+        let numScale = input.input({
             type: "number",
             id: "numscale",
             value: "1.000",
@@ -206,7 +206,7 @@ class MapCreatorTask extends Task {
         mapFieldSet.appendChild(mapLegend);
 
         let mapGrid = new Grid(7, 2);
-        let txtMapName = Input.input({
+        let txtMapName = input.input({
             type: "text",
             id: "txtmapname",
             value: `${sanitize(path.basename(imagePath).replace(/\.[^/.]+$/, ''))}`,
@@ -220,7 +220,7 @@ class MapCreatorTask extends Task {
         mapGrid.addElement(lblMapName, 0, 0);
         mapGrid.addElement(txtMapName, 0, 1);
 
-        let txtPixelTiles = Input.input({
+        let txtPixelTiles = input.input({
             type: "text",
             id: "txtpixeltiles",
             value: "256"
@@ -231,7 +231,7 @@ class MapCreatorTask extends Task {
         mapGrid.addElement(lblPixelTiles, 1, 0);
         mapGrid.addElement(txtPixelTiles, 1, 1);
 
-        let numMaximumZoom = Input.input({
+        let numMaximumZoom = input.input({
             type: "number",
             id: "nummaximumzoom",
             value: "5",
@@ -244,7 +244,7 @@ class MapCreatorTask extends Task {
         mapGrid.addElement(lblMaximumZoom, 2, 0);
         mapGrid.addElement(numMaximumZoom, 2, 1);
 
-        let checkUseAllSlice = Input.input({
+        let checkUseAllSlice = input.input({
             type: "checkbox",
             id: "useallslice",
             onchange: (e) => {
@@ -258,7 +258,7 @@ class MapCreatorTask extends Task {
         mapGrid.addElement(lblUseAllSlice, 3, 0);
         mapGrid.addElement(checkUseAllSlice, 3, 1);
 
-        let checkMergeAllSlices = Input.input({
+        let checkMergeAllSlices = input.input({
             type: "checkbox",
             id: "mergeallslices",
             onchange: (e) => {
@@ -277,7 +277,7 @@ class MapCreatorTask extends Task {
             checkUseAllSlice.disabled = true;
         }
 
-        let numUsedSlice = Input.input({
+        let numUsedSlice = input.input({
             type: "number",
             id: "numusedslice",
             value: "1",

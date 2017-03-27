@@ -23,10 +23,10 @@ const path = require('path');
 const {
     Task,
     Modal,
-    Input,
     Grid,
     FolderSelector,
     ButtonsContainer,
+    input,
     util,
     gui
 } = require('electrongui');
@@ -139,7 +139,7 @@ class HolesDetectionTask extends Task {
         let body = document.createElement("DIV");
         let grid = new Grid(3, 2);
 
-        let numRadius = Input.input({
+        let numRadius = input.input({
             type: "number",
             id: "numradius",
             value: "10",
@@ -151,7 +151,7 @@ class HolesDetectionTask extends Task {
         grid.addElement(lblRadius, 0, 0);
         grid.addElement(numRadius, 0, 1);
 
-        let numThreshold = Input.input({
+        let numThreshold = input.input({
             type: "number",
             id: "numthreshold",
             value: "250",
