@@ -173,7 +173,7 @@ class ImageJExtension extends GuiExtension {
      * Deactivates the extension.
      */
     deactivate() {
-        gui.removeMenuItem(this.menu);
+        this.removeMenu();
         this.element.removeChild(this.pane.element);
     }
 
