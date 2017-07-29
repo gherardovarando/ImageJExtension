@@ -35,6 +35,7 @@ const {
     dialog
 } = require('electron').remote;
 const ImageJUtil = require(path.join('..', 'ImageJUtil'));
+const TaskUtils = require('./TaskUtils');
 
 class MapCreatorTask extends Task {
 
@@ -107,12 +108,12 @@ class MapCreatorTask extends Task {
         if (this.isMap) {
             this.customAction["caption"] = "Load map to workspace";
             this.customAction["onclick"] = () => {
-              gui.extensions.mapPage.loadMap(this.jsonFile);
+                gui.extensions.mapPage.loadMap(this.jsonFile);
             };
         } else {
             this.customAction["caption"] = "Add layer to a map in workspace";
             this.customAction["onclick"] = () => {
-                Task.Utils.showMapSelector(this.jsonFile);
+                TaskUtils.showMapSelector(this.jsonFile);
             };
         }
         return super.success();

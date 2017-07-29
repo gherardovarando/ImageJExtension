@@ -22,6 +22,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const Tiff = require(path.join(__dirname, 'lib', 'Tiff'));
+const sizeOf = require('image-size');
 
 /**
  * ImageJ extension utilities.

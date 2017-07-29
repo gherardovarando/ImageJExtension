@@ -35,6 +35,8 @@ const {
     dialog
 } = require('electron').remote;
 const ImageJUtil = require(path.join('..', 'ImageJUtil'));
+const TaskUtils = require('./TaskUtils');
+
 
 class ObjectDetectionTask extends Task {
 
@@ -116,7 +118,7 @@ class ObjectDetectionTask extends Task {
     success() {
         this.customAction["caption"] = "Add layer to a map in workspace";
         this.customAction["onclick"] = () => {
-            Task.Utils.showMapSelector(this.jsonFile);
+            TaskUtils.showMapSelector(this.jsonFile);
         };
         return super.success();
     }

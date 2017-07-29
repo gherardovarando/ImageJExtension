@@ -16,8 +16,8 @@
     "cig",
     "hbp"
   ],
-  "author": "Mario Juez",
-  "license": "GPL-3.0",
+  "author": "Mario Juez, Gherardo Varando <gherardo.varando@gmail.cpm>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mjuez/ImageJExtension/issues"
   },
@@ -25,6 +25,7 @@
   "dependencies": {
     "electron": "^1.6.2",
     "electrongui": "github:gherardovarando/electrongui",
+    "image-size": "^0.6.0",
     "sanitize-filename": "^1.6.1"
   }
 }

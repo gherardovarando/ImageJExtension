@@ -34,6 +34,7 @@ const ChildProcess = require('child_process').ChildProcess;
 const {
     dialog
 } = require('electron').remote;
+const TaskUtils = require('./TaskUtils');
 const ImageJUtil = require(path.join('..', 'ImageJUtil'));
 
 class HolesDetectionTask extends Task {
@@ -115,7 +116,7 @@ class HolesDetectionTask extends Task {
     success() {
         this.customAction["caption"] = "Add layer to a map in workspace";
         this.customAction["onclick"] = () => {
-            Task.Utils.showMapSelector(this.jsonFile);
+            TaskUtils.showMapSelector(this.jsonFile);
         };
         return super.success();
     }
@@ -133,7 +134,22 @@ class HolesDetectionTask extends Task {
     showModal(next) {
         var modal = new Modal({
             title: "Holes detection options",
-            height: "auto"
+            height: "auto",
+            oncancel: ()=>{
+              this.cancel();
+            },
+            onsubmit: ()=>{
+              if (fldOutputFolder.getFolderRoute()) {
+                  let params = {
+                      radius: numRadius.value || "[]",
+                      threshold: numThreshold.value || "[]",
+                      path: fldOutputFolder.getFolderRoute()
+                  }
+                  next(modal, params);
+              } else {
+                  dialog.showErrorBox("Can't detect holes", "You must choose an output folder where results will be saved.");
+              }
+            }
         });
 
         let body = document.createElement("DIV");
