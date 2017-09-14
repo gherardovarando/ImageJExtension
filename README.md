@@ -11,6 +11,8 @@ It uses ImageJ tool for performing some of the available image processing tasks 
 
 ## Requirements
 
+To avoid license problem and to distribute a slimmer extension, we decided to not distribute Imagej with the extension anymore. ImageJ need to be installed in the system (see https://imagej.nih.gov/ij/) and the ImageJ extension need to be configured.
+
 ImageJ is written in Java and needs [Java Runtine Environment (JRE)](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) installed in the system to work. In order to avoid possible performance issues (memory issues), installed JRE version **must match** with the operating system architecture (32bit / 64bit).
 
 ## User guide
