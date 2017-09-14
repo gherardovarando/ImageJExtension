@@ -362,12 +362,9 @@ class ImageJExtension extends GuiExtension {
    * Opens a modal window for ImageJ memory parameters modification.
    */
   configImageJ() {
-    let body = document.createElement('DIV');
-    body.className = 'flex-container';
-    let div = document.createElement('DIV');
-    body.appendChild(div);
+    let body = util.div('cellcontainer');
     let mem = input.input({
-      parent: div,
+      parent: body,
       label: 'Memory (MB)',
       className: 'simple form-control cell',
       value: this._configuration.memory,
@@ -378,7 +375,7 @@ class ImageJExtension extends GuiExtension {
       placeholder: 'memory'
     });
     let stmem = input.input({
-      parent: div,
+      parent: body,
       label: 'Stack memory (MB)',
       className: 'simple form-control cell',
       value: this._configuration.stackMemory,
@@ -388,33 +385,41 @@ class ImageJExtension extends GuiExtension {
       step: 1,
       placeholder: 'memory'
     });
-    let pt = input.input({
-      parent: div,
-      label: 'ImageJ path',
-      className: 'simple form-control cell',
+
+    let pt = new FolderSelector('imagejpathselector', {
+      text: "Choose ImageJ path",
+      className: 'cell',
+      label: this._configuration.path || 'path' ,
       value: this._configuration.path || '',
-      type: 'text',
-      placeholder: 'path'
+      icon: 'fa fa-external-link',
+      title : 'Select the path to the ij.jar file of the local ImageJ installation'
     });
+    body.appendChild(pt.element);
+    let img = document.createElement('IMG');
+    img.className = "cell";
+    img.style.float="right";
+    img.src = this.image;
+    img.width = 233; //150;
+    img.height = 47; //30.26;
+    body.appendChild(img);
     new Modal({
       title: `ImageJ configuration`,
-      width: '600px',
+      width: '400px',
       height: 'auto',
       body: body,
       oncancel: () => {
         gui.notify('ImageJ configured');
         this._configuration.memory = mem.value;
         this._configuration.stackMemory = stmem.value;
-        this._configuration.path = pt.value;
+        this._configuration.path = pt.getFolderRoute();
         storage.set('imagej-configuration', this._configuration);
       },
       onsubmit: () => {
         gui.notify('ImageJ configured');
         this._configuration.memory = mem.value;
         this._configuration.stackMemory = stmem.value;
-        this._configuration.path = pt.value;
+        this._configuration.path = pt.getFolderRoute();
         storage.set('imagej-configuration', this._configuration);
-
       }
     }).show();
   }
