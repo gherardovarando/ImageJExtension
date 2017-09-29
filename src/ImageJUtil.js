@@ -134,10 +134,10 @@ class ImageJUtil {
                     jsonConfig = {
                         name: `centroid_${filename}`,
                         author: os.userInfo().username,
-                        type: `pointsLayer`,
+                        type: `csvTiles`,
                         tileSize: size[0],
                         size: size[1],
-                        pointsUrlTemplate: `points_${filename.replace(/ /g, "_")}.csv`
+                        urlTemplate: `points_${filename.replace(/ /g, "_")}.csv`
                     }
                     break;
 

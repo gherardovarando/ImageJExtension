@@ -58,7 +58,7 @@ const {
 const ImageJUtil = require(path.join(__dirname, 'src', 'ImageJUtil'));
 
 /**
- * ImageJ Atlas extension.
+ * ImageJ extension.
  */
 class ImageJExtension extends GuiExtension {
 
@@ -68,7 +68,9 @@ class ImageJExtension extends GuiExtension {
    */
   constructor() {
     super({
-      author: 'Mario Juez (mjuez@fi.upm.es)',
+      info: {
+      author: 'Mario Juez (mjuez@fi.upm.es), Gherardo Varando (gherardo.varando@gmail.com)'
+      },
       image: path.join(__dirname, "res", "img", "imagej-logo.gif"), //ok now
       menuLabel: 'ImageJ',
       menuTemplate: [{
@@ -82,24 +84,26 @@ class ImageJExtension extends GuiExtension {
           this.configImageJ();
         }
       }, {
-        label: 'Map Tools',
-        submenu: [{
-          label: "Create map from image",
-          click: () => {
-            this.createMap(true, false);
-          }
-        }, {
-          label: "Create map from folder",
-          click: () => {
-            this.createMap(true, true);
-          }
-        }, {
-          label: "Create layer from image",
+        label: 'Create TileLayer',
+        submenu: [
+        //   {
+        //   label: "Create map from image",
+        //   click: () => {
+        //     this.createMap(true, false);
+        //   }
+        // }, {
+        //   label: "Create map from folder",
+        //   click: () => {
+        //     this.createMap(true, true);
+        //   }
+        // },
+        {
+          label: "from image",
           click: () => {
             this.createMap(false, false);
           }
         }, {
-          label: "Create layer from folder",
+          label: "from folder",
           click: () => {
             this.createMap(false, true);
           }
@@ -157,7 +161,6 @@ class ImageJExtension extends GuiExtension {
       memory: this.maxMemory,
       stackMemory: this.maxStackMemory
     }
-
   }
 
   /**
@@ -233,7 +236,7 @@ class ImageJExtension extends GuiExtension {
    * @param {string} args Arguments needed by the macro.
    */
   run(macro, args) {
-    return spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`, `-batchpath`, `Atlas${path.sep}${macro}.ijm`, `${args}`], {
+    return spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`, `-batchpath`, path.join(__dirname, "macros", `${macro}.ijm`), `${args}`], {
       cwd: this._configuration.path
     });
   }
