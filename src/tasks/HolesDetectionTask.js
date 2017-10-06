@@ -27,8 +27,7 @@ const {
     FolderSelector,
     ButtonsContainer,
     input,
-    util,
-    gui
+    util
 } = require('electrongui');
 const ChildProcess = require('child_process').ChildProcess;
 const {
@@ -99,7 +98,7 @@ class HolesDetectionTask extends Task {
 
                 promise.then((notification) => {
                     util.notifyOS(notification);
-                    gui.notify(notification);
+                    //gui.notify(notification);
                 });
             });
 
@@ -108,7 +107,7 @@ class HolesDetectionTask extends Task {
                 util.notifyOS(`Holes detection exec error: ${err}`);
             });
 
-            gui.notify(`Holes detection task started.`);
+            //gui.notify(`Holes detection task started.`);
             modal.destroy();
         });
     }

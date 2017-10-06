@@ -1,6 +1,5 @@
 
 const {
-    gui,
     task,
     Modal,
     Grid,
@@ -27,7 +26,7 @@ TaskUtils = class {
 
         let grid = new Grid(1, 2);
 
-        let maps = gui.mapExtension.maps;
+        let maps = {};//gui.mapExtension.maps;
         let choices = {};
         if (maps) {
             Object.keys(maps).map((key) => {
@@ -59,12 +58,12 @@ TaskUtils = class {
             text: "Ok",
             action: () => {
                 if (jsonFile && Object.keys(maps).length) {
-                    gui.mapExtension.mapBuilder.setConfiguration(maps[selMap.value]);
-                    gui.mapExtension.addLayerFile(jsonFile);
+                    //gui.mapExtension.mapBuilder.setConfiguration(maps[selMap.value]);
+                    //gui.mapExtension.addLayerFile(jsonFile);
                     let selected = selMap.options[selMap.selectedIndex].text;
-                    gui.notify(`Added layer to map ${selected}.`);
+                    //gui.notify(`Added layer to map ${selected}.`);
                 } else {
-                    gui.notify(`Error adding layer.`);
+                    //gui.notify(`Error adding layer.`);
                 }
                 modal.destroy();
             },

@@ -27,8 +27,7 @@ const {
   FolderSelector,
   ButtonsContainer,
   input,
-  util,
-  gui
+  util
 } = require('electrongui');
 const ChildProcess = require('child_process').ChildProcess;
 const {
@@ -92,7 +91,7 @@ class MapCreatorTask extends Task {
           this.cancel();
         }
         util.notifyOS(notification);
-        gui.notify(notification);
+        //gui.notify(notification);
       });
 
       this.childProcess.on('error', (err) => {
@@ -100,7 +99,7 @@ class MapCreatorTask extends Task {
         util.notifyOS(`Map creator exec error: ${err}`);
       });
 
-      gui.notify(`MapCreator task started.`);
+      //gui.notify(`MapCreator task started.`);
       modal.destroy();
     });
   }
@@ -109,7 +108,7 @@ class MapCreatorTask extends Task {
     if (this.isMap) {
       this.customAction["caption"] = "Load map to workspace";
       this.customAction["onclick"] = () => {
-        gui.extensions.MapExtension.loadMap(this.jsonFile);
+        //gui.extensions.MapExtension.loadMap(this.jsonFile);
       };
     } else {
       this.customAction["caption"] = "Add layer to a map in workspace";

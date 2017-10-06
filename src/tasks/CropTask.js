@@ -29,9 +29,8 @@ const {
   FolderSelector,
   ButtonsContainer,
   input,
-  util,
-  gui
-} = require('electrongui');
+  util
+} =require('electrongui');
 const ChildProcess = require('child_process').ChildProcess;
 const {
   dialog
@@ -84,7 +83,7 @@ class CropTask extends Task {
 
         promise.then((notification) => {
           util.notifyOS(notification);
-          gui.notify(notification);
+          //gui.notify(notification);
         });
       });
 
@@ -93,7 +92,7 @@ class CropTask extends Task {
         util.notifyOS(`Image cropping exec error: ${err}`);
       });
 
-      gui.notify(`Image cropping task started.`);
+      //gui.notify(`Image cropping task started.`);
       modal.destroy();
     });
   }

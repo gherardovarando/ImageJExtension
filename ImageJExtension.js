@@ -22,7 +22,7 @@
 
 'use strict';
 
-const storage = require('electron-json-storage');
+const storage = module.parent.require('electron-json-storage');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
@@ -33,18 +33,16 @@ const {
   Grid,
   FolderSelector,
   ButtonsContainer,
-  TaskManager,
   input,
   util,
-  gui,
   Workspace
-} = require('electrongui');
+} = module.parent.require('electrongui');
 const {
   dialog,
   Menu,
   MenuItem,
   app
-} = require('electron').remote;
+} = module.parent.require('electron').remote;
 const {
   exec,
   spawn
@@ -66,8 +64,8 @@ class ImageJExtension extends GuiExtension {
    * Creates an instance of the extension.
    * A menu with all capabilities is defined.
    */
-  constructor() {
-    super({
+  constructor(gui) {
+    super(gui,{
       info: {
       author: 'Mario Juez (mjuez@fi.upm.es), Gherardo Varando (gherardo.varando@gmail.com)'
       },
@@ -147,7 +145,7 @@ class ImageJExtension extends GuiExtension {
       }, {
         label: 'Tools',
         submenu: [{
-          label: "Create mosaic",
+          label: "Create Mosaic",
           click: () => {
             this.cropImage();
           }
@@ -226,7 +224,7 @@ class ImageJExtension extends GuiExtension {
     });
 
     childProcess.on('close', (code) => {
-      gui.notify('ImageJ closed');
+      this.gui.notify('ImageJ closed');
     });
   }
 
@@ -266,7 +264,7 @@ class ImageJExtension extends GuiExtension {
           details = `Layer: ${path.basename(filepaths[0])}`;
         }
         let mapCreatorTask = new MapCreatorTask(details, isMap, isFolder, this);
-        TaskManager.addTask(mapCreatorTask);
+        this.gui.taskManager.addTask(mapCreatorTask);
         mapCreatorTask.run(filepaths[0]);
       }
     });
@@ -300,7 +298,7 @@ class ImageJExtension extends GuiExtension {
           }
         }
         let objectDetectionTask = new ObjectDetectionTask(details, mode, this);
-        TaskManager.addTask(objectDetectionTask);
+        this.gui.taskManager.addTask(objectDetectionTask);
         objectDetectionTask.run(filepaths[0]);
       }
     });
@@ -334,7 +332,7 @@ class ImageJExtension extends GuiExtension {
           }
         }
         let holesDetectionTask = new HolesDetectionTask(details, mode, this);
-        TaskManager.addTask(holesDetectionTask);
+        this.gui.taskManager.addTask(holesDetectionTask);
         holesDetectionTask.run(filepaths[0]);
       }
     });
@@ -353,7 +351,7 @@ class ImageJExtension extends GuiExtension {
         if (filepaths) {
           let details = `Image: ${path.basename(filepaths[0])}`;
           let cropTask = new CropTask(details, this);
-          TaskManager.addTask(cropTask);
+          this.gui.taskManager.addTask(cropTask);
           cropTask.run(filepaths[0]);
         }
 
@@ -411,14 +409,14 @@ class ImageJExtension extends GuiExtension {
       height: 'auto',
       body: body,
       oncancel: () => {
-        gui.notify('ImageJ configured');
+        this.gui.notify('ImageJ configured');
         this._configuration.memory = mem.value;
         this._configuration.stackMemory = stmem.value;
         this._configuration.path = pt.getFolderRoute();
         storage.set('imagej-configuration', this._configuration);
       },
       onsubmit: () => {
-        gui.notify('ImageJ configured');
+        this.gui.notify('ImageJ configured');
         this._configuration.memory = mem.value;
         this._configuration.stackMemory = stmem.value;
         this._configuration.path = pt.getFolderRoute();

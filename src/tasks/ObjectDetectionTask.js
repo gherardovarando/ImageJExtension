@@ -27,8 +27,7 @@ const {
   FolderSelector,
   ButtonsContainer,
   input,
-  util,
-  gui
+  util
 } = require('electrongui');
 const ChildProcess = require('child_process').ChildProcess;
 const {
@@ -101,7 +100,7 @@ class ObjectDetectionTask extends Task {
 
         promise.then((notification) => {
           util.notifyOS(notification);
-          gui.notify(notification);
+          //gui.notify(notification);
         });
       });
 
@@ -110,7 +109,7 @@ class ObjectDetectionTask extends Task {
         util.notifyOS(`Object detection exec error: ${err}`);
       });
 
-      gui.notify(`Object detection task started.`);
+      //gui.notify(`Object detection task started.`);
       modal.destroy();
     });
   }
