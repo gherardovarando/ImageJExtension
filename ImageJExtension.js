@@ -22,7 +22,7 @@
 
 'use strict';
 
-const storage = module.parent.require('electron-json-storage');
+const storage = require('electron-json-storage');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
@@ -36,13 +36,13 @@ const {
   input,
   util,
   Workspace
-} = module.parent.require('electrongui');
+} = require('electrongui');
 const {
   dialog,
   Menu,
   MenuItem,
   app
-} = module.parent.require('electron').remote;
+} = require('electron').remote;
 const {
   exec,
   spawn
