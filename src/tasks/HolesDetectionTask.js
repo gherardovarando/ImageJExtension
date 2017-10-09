@@ -185,9 +185,10 @@ class HolesDetectionTask extends Task {
         grid.addElement(lblOutputFolder, 2, 0);
         grid.addElement(fldOutputFolder.element, 2, 1);
 
-        let buttonsContainer = new ButtonsContainer(document.createElement("DIV"));
+        let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'));
         buttonsContainer.addButton({
             id: "CancelDetection00",
+            groupId: 'holesmodal00',
             text: "Cancel",
             action: () => {
                 this.cancel();
@@ -197,6 +198,7 @@ class HolesDetectionTask extends Task {
         });
         buttonsContainer.addButton({
             id: "OkDetection00",
+            groupId: 'holesmodal00',
             text: "Ok",
             action: () => {
                 if (typeof next === 'function') {

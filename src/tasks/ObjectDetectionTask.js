@@ -288,10 +288,11 @@ class ObjectDetectionTask extends Task {
     grid.addElement(lblOutputFolder, 8, 0);
     grid.addElement(fldOutputFolder.element, 8, 1);
 
-    let buttonsContainer = new ButtonsContainer(document.createElement("DIV"));
+    let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'));
     buttonsContainer.addButton({
       id: "CancelDetection00",
       text: "Cancel",
+      groupId: 'objcmodal00',
       action: () => {
         this.cancel();
         modal.destroy();
@@ -301,6 +302,7 @@ class ObjectDetectionTask extends Task {
     buttonsContainer.addButton({
       id: "OkDetection00",
       text: "Ok",
+      groupId: 'objcmodal00',
       action: () => {
         if (typeof next === 'function') {
           if (fldOutputFolder.getFolderRoute()) {

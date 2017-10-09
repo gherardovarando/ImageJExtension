@@ -208,9 +208,10 @@ class CropTask extends Task {
     grid.addElement(lblOutputFolder, 5, 0);
     grid.addElement(fldOutputFolder.element, 5, 1);
 
-    let buttonsContainer = new ButtonsContainer(document.createElement("DIV"));
+    let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'));
     buttonsContainer.addButton({
       id: "CancelDetection00",
+      groupId: 'gropmodal00',
       text: "Cancel",
       action: () => {
         this.cancel();
@@ -221,6 +222,7 @@ class CropTask extends Task {
     buttonsContainer.addButton({
       id: "OkDetection00",
       text: "Ok",
+      groupId: 'gropmodal00',
       action: () => {
         if (typeof next === 'function') {
           if (fldOutputFolder.getFolderRoute()) {

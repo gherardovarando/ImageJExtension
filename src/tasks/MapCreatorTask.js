@@ -64,7 +64,7 @@ class MapCreatorTask extends Task {
         let regex = /[0-9]+\/[0-9]+/g;
         if (regex.test(data)) {
           let progress = data.split("/");
-          let percentage = (progress[0] * 100) / progress[1];
+          let percentage = (progress[0] * 100) / progress[progress.length - 1];
           this.updateProgress(percentage);
         }
       });
@@ -323,7 +323,7 @@ class MapCreatorTask extends Task {
     mapGrid.addElement(lblOutputFolder, 6, 0);
     mapGrid.addElement(fldOutputFolder.element, 6, 1);
 
-    let buttonsContainer = new ButtonsContainer(document.createElement("DIV"));
+    let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'));
     buttonsContainer.addButton({
       id: "CancelMap00",
       text: "Cancel",
@@ -331,11 +331,13 @@ class MapCreatorTask extends Task {
         this.cancel();
         modal.destroy();
       },
-      className: "btn-default"
+      className: "btn-default",
+      groupId: 'makemap00'
     });
     buttonsContainer.addButton({
       id: "CreateMap00",
       text: "Create",
+      groupId: 'makemap00',
       action: () => {
         if (typeof next === 'function') {
           if (fldOutputFolder.getFolderRoute()) {
@@ -359,7 +361,7 @@ class MapCreatorTask extends Task {
       },
       className: "btn-default"
     });
-    let footer = document.createElement('DIV');
+    let footer = util.div('toolbar toolbar-footer');
     footer.appendChild(buttonsContainer.element);
 
     if (this.isFolder) {
