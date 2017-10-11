@@ -1,6 +1,6 @@
 {
   "name": "imagejextension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ImageJ Extension for Atlas app",
   "main": "ImageJExtension.js",
   "scripts": {
