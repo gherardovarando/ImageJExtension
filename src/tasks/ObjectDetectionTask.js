@@ -136,6 +136,7 @@ class ObjectDetectionTask extends Task {
     var modal = new Modal({
       title: "Object detection options",
       height: "auto",
+      width: '400px',
       oncancel: () => {
         this.cancel();
       },
@@ -161,46 +162,39 @@ class ObjectDetectionTask extends Task {
       }
     });
 
-    let body = document.createElement("DIV");
-    let grid = new Grid(9, 2);
+    let body = util.div('padded cell-container')
 
     let numRMin = input.input({
       type: "number",
       id: "numrmin",
       value: "1",
       min: "1",
-      max: "15"
-    });
-    let lblRMin = document.createElement("LABEL");
-    lblRMin.htmlFor = "numrmin";
-    lblRMin.innerHTML = "Minimum radius: ";
-    grid.addElement(lblRMin, 0, 0);
-    grid.addElement(numRMin, 0, 1);
+      max: "15",
+      label: 'Minimum radius: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let numRMax = input.input({
       type: "number",
       id: "numrmax",
       value: "5",
       min: "1",
-      max: "15"
-    });
-    let lblRMax = document.createElement("LABEL");
-    lblRMax.htmlFor = "numrmax";
-    lblRMax.innerHTML = "Maximum radius: ";
-    grid.addElement(lblRMax, 1, 0);
-    grid.addElement(numRMax, 1, 1);
+      max: "15",
+      label: 'Maximum radius: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let numBy = input.input({
       type: "number",
       id: "numby",
       value: "1",
-      min: "0"
-    });
-    let lblBy = document.createElement("LABEL");
-    lblBy.htmlFor = "numby";
-    lblBy.innerHTML = "By: ";
-    grid.addElement(lblBy, 2, 0);
-    grid.addElement(numBy, 2, 1);
+      min: "0",
+      label: 'By: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let selThrMethod = input.selectInput({
       label: "Threshold method",
@@ -223,37 +217,31 @@ class ObjectDetectionTask extends Task {
         "Yen"
       ],
       className: "simple form-control",
-      value: "Moments"
-    });
-    let lblThrMethod = document.createElement("LABEL");
-    lblThrMethod.htmlFor = "selthrmethod";
-    lblThrMethod.innerHTML = "Threshold method: ";
-    grid.addElement(lblThrMethod, 3, 0);
-    grid.addElement(selThrMethod, 3, 1);
+      value: "Moments",
+      label: 'Threshold method: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let numMin = input.input({
       type: "number",
       id: "nummin",
       value: "1",
-      min: "0"
-    });
-    let lblMin = document.createElement("LABEL");
-    lblMin.htmlFor = "nummin";
-    lblMin.innerHTML = "Minimum: ";
-    grid.addElement(lblMin, 4, 0);
-    grid.addElement(numMin, 4, 1);
+      min: "0",
+      label: 'Minimum: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let numMax = input.input({
       type: "number",
       id: "nummax",
       value: "-1",
-      min: "-1"
-    });
-    let lblMax = document.createElement("LABEL");
-    lblMax.htmlFor = "nummax";
-    lblMax.innerHTML = "Maximum: ";
-    grid.addElement(lblMax, 5, 0);
-    grid.addElement(numMax, 5, 1);
+      min: "-1",
+      label: 'Maximum: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let numFraction = input.input({
       type: "number",
@@ -261,38 +249,28 @@ class ObjectDetectionTask extends Task {
       value: "0.500",
       min: "0",
       max: "1",
-      step: "0.001"
-    });
-    let lblFraction = document.createElement("LABEL");
-    lblFraction.htmlFor = "numfraction";
-    lblFraction.innerHTML = "Fraction: ";
-    grid.addElement(lblFraction, 6, 0);
-    grid.addElement(numFraction, 6, 1);
+      step: "0.001",
+      label: 'Fraction: ',
+      parent: body,
+      className: 'form-control'
+    })
 
     let numToll = input.input({
       type: "number",
       id: "numtoll",
       value: "0",
-      min: "0"
-    });
-    let lblToll = document.createElement("LABEL");
-    lblToll.htmlFor = "numtoll";
-    lblToll.innerHTML = "Tolerance: ";
-    grid.addElement(lblToll, 7, 0);
-    grid.addElement(numToll, 7, 1);
+      min: "0",
+      label: 'Tollerance: ',
+      parent: body,
+      className: 'form-control'
+    })
 
-    let fldOutputFolder = new FolderSelector("fileoutputfolder");
-    let lblOutputFolder = document.createElement("LABEL");
-    lblOutputFolder.htmlFor = "fileoutputfolder";
-    lblOutputFolder.innerHTML = "Output folder: ";
-    grid.addElement(lblOutputFolder, 8, 0);
-    grid.addElement(fldOutputFolder.element, 8, 1);
-
-    let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'));
+    let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'))
     buttonsContainer.addButton({
       id: "CancelDetection00",
       text: "Cancel",
       groupId: 'objcmodal00',
+      groupClassName: 'pull-right',
       action: () => {
         this.cancel();
         modal.destroy();
@@ -325,10 +303,12 @@ class ObjectDetectionTask extends Task {
       },
       className: "btn-default"
     });
-    let footer = document.createElement('DIV');
+    let fldOutputFolder = new FolderSelector("fileoutputfolder")
+    buttonsContainer.appendChild(fldOutputFolder)
+    let footer = util.div('toolbar toolbar-footer');
     footer.appendChild(buttonsContainer.element);
 
-    modal.addBody(grid.element);
+    modal.addBody(body);
     modal.addFooter(footer);
     modal.show();
   }

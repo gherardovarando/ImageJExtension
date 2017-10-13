@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/gherardovarando/ImageJExtension#readme",
   "dependencies": {
-    "electrongui": "^0.1.4",
+    "electrongui": "^0.1.5",
     "image-size": "^0.6.0",
     "sanitize-filename": "^1.6.1"
   }

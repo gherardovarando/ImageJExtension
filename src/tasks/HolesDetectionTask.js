@@ -134,6 +134,7 @@ class HolesDetectionTask extends Task {
         var modal = new Modal({
             title: "Holes detection options",
             height: "auto",
+            width: '400px',
             oncancel: ()=>{
               this.cancel();
             },
@@ -149,46 +150,36 @@ class HolesDetectionTask extends Task {
                   dialog.showErrorBox("Can't detect holes", "You must choose an output folder where results will be saved.");
               }
             }
-        });
+        })
 
-        let body = document.createElement("DIV");
-        let grid = new Grid(3, 2);
+        let body = util.div('padded cell-container')
 
         let numRadius = input.input({
             type: "number",
+            label: 'Radius of median filter: ',
             id: "numradius",
             value: "10",
-            min: "0"
-        });
-        let lblRadius = document.createElement("LABEL");
-        lblRadius.htmlFor = "numradius";
-        lblRadius.innerHTML = "Radius of median filter: ";
-        grid.addElement(lblRadius, 0, 0);
-        grid.addElement(numRadius, 0, 1);
+            min: "0",
+            className: 'form-control',
+            parent: body
+        })
 
         let numThreshold = input.input({
             type: "number",
             id: "numthreshold",
             value: "250",
-            min: "0"
-        });
-        let lblThreshold = document.createElement("LABEL");
-        lblThreshold.htmlFor = "numthreshold";
-        lblThreshold.innerHTML = "Threshold: ";
-        grid.addElement(lblThreshold, 1, 0);
-        grid.addElement(numThreshold, 1, 1);
+            min: "0",
+            label: 'Threshold: ',
+            className: 'form-control',
+            parent: body
+        })
 
-        let fldOutputFolder = new FolderSelector("fileoutputfolder");
-        let lblOutputFolder = document.createElement("LABEL");
-        lblOutputFolder.htmlFor = "fileoutputfolder";
-        lblOutputFolder.innerHTML = "Output folder: ";
-        grid.addElement(lblOutputFolder, 2, 0);
-        grid.addElement(fldOutputFolder.element, 2, 1);
 
         let buttonsContainer = new ButtonsContainer(util.div('toolbar-actions'));
         buttonsContainer.addButton({
             id: "CancelDetection00",
             groupId: 'holesmodal00',
+            groupClassName: 'pull-right',
             text: "Cancel",
             action: () => {
                 this.cancel();
@@ -216,10 +207,13 @@ class HolesDetectionTask extends Task {
             },
             className: "btn-default"
         });
-        let footer = document.createElement('DIV');
+        let footer = util.div('toolbar toolbar-footer');
+        let fldOutputFolder = new FolderSelector("fileoutputfolder",{
+          className: 'btn-group'
+        })
+        buttonsContainer.element.appendChild(fldOutputFolder.element)
         footer.appendChild(buttonsContainer.element);
-
-        modal.addBody(grid.element);
+        modal.addBody(body);
         modal.addFooter(footer);
         modal.show();
     }
