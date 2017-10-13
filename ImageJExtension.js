@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-'use strict';
+'use strict'
 
-const storage = require('electron-json-storage');
-const os = require('os');
-const fs = require('fs');
-const path = require('path');
+const isDev = require('electron-is-dev')
+const storage = require('electron-json-storage')
+const os = require('os')
+const fs = require('fs')
+const path = require('path')
 const {
   GuiExtension,
   ToggleElement,
@@ -36,24 +37,24 @@ const {
   input,
   util,
   Workspace
-} = require('electrongui');
+} = require('electrongui')
 const {
   dialog,
   Menu,
   MenuItem,
   app
-} = require('electron').remote;
+} = require('electron').remote
 const {
   exec,
   spawn
-} = require('child_process');
+} = require('child_process')
 const {
   MapCreatorTask,
   ObjectDetectionTask,
   HolesDetectionTask,
   CropTask
-} = require(path.join(__dirname, 'src', 'ImageJTasks'));
-const ImageJUtil = require(path.join(__dirname, 'src', 'ImageJUtil'));
+} = require(path.join(__dirname, 'src', 'ImageJTasks'))
+const ImageJUtil = require(path.join(__dirname, 'src', 'ImageJUtil'))
 
 /**
  * ImageJ extension.
@@ -74,12 +75,12 @@ class ImageJExtension extends GuiExtension {
       menuTemplate: [{
         label: 'Launch ImageJ',
         click: () => {
-          this.launchImageJ();
+          this.launchImageJ()
         }
       }, {
         label: 'Configure ImageJ',
         click: () => {
-          this.configImageJ();
+          this.configImageJ()
         }
       }, {
         label: 'Create TileLayer',
@@ -87,23 +88,23 @@ class ImageJExtension extends GuiExtension {
         //   {
         //   label: "Create map from image",
         //   click: () => {
-        //     this.createMap(true, false);
+        //     this.createMap(true, false)
         //   }
         // }, {
         //   label: "Create map from folder",
         //   click: () => {
-        //     this.createMap(true, true);
+        //     this.createMap(true, true)
         //   }
         // },
         {
           label: "from image",
           click: () => {
-            this.createMap(false, false);
+            this.createMap(false, false)
           }
         }, {
           label: "from folder",
           click: () => {
-            this.createMap(false, true);
+            this.createMap(false, true)
           }
         }]
       }, {
@@ -111,17 +112,17 @@ class ImageJExtension extends GuiExtension {
         submenu: [{
           label: "Single image",
           click: () => {
-            this.objectDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
+            this.objectDetection(ImageJUtil.LayersMode.SINGLE_IMAGE)
           }
         }, {
           label: "Folder",
           click: () => {
-            this.objectDetection(ImageJUtil.LayersMode.FOLDER);
+            this.objectDetection(ImageJUtil.LayersMode.FOLDER)
           }
         }, {
           label: "Image list",
           click: () => {
-            this.objectDetection(ImageJUtil.LayersMode.IMAGE_LIST);
+            this.objectDetection(ImageJUtil.LayersMode.IMAGE_LIST)
           }
         }]
       }, {
@@ -129,17 +130,17 @@ class ImageJExtension extends GuiExtension {
         submenu: [{
           label: "Single image",
           click: () => {
-            this.holesDetection(ImageJUtil.LayersMode.SINGLE_IMAGE);
+            this.holesDetection(ImageJUtil.LayersMode.SINGLE_IMAGE)
           }
         }, {
           label: "Folder",
           click: () => {
-            this.holesDetection(ImageJUtil.LayersMode.FOLDER);
+            this.holesDetection(ImageJUtil.LayersMode.FOLDER)
           }
         }, {
           label: "Image list",
           click: () => {
-            this.holesDetection(ImageJUtil.LayersMode.IMAGE_LIST);
+            this.holesDetection(ImageJUtil.LayersMode.IMAGE_LIST)
           }
         }]
       }, {
@@ -147,14 +148,19 @@ class ImageJExtension extends GuiExtension {
         submenu: [{
           label: "Create Mosaic",
           click: () => {
-            this.cropImage();
+            this.cropImage()
           }
         }]
       }]
-    });
-    this.maxMemory = parseInt((os.totalmem() * 0.7) / 1000000);
-    this.maxStackMemory = 515;
-    this.image = path.join(__dirname, "res", "img", "imagej-logo.gif");
+    })
+    if (isDev){
+      this._macrosPath = path.join(__dirname, 'macros')
+    }else{
+      this._macrosPath = path.join(process.resourcesPath, 'macros')
+    }
+    this.maxMemory = parseInt((os.totalmem() * 0.7) / 1000000)
+    this.maxStackMemory = 515
+    this.image = path.join(__dirname, "res", "img", "imagej-logo.gif")
     this._configuration = {
       memory: this.maxMemory,
       stackMemory: this.maxStackMemory
@@ -165,17 +171,17 @@ class ImageJExtension extends GuiExtension {
    * Activates the extension.
    */
   activate() {
-    this.pane = new ToggleElement(document.createElement('DIV'));
-    this.pane.element.className = 'pane';
-    this.pane.show();
-    this.element.appendChild(this.pane.element);
-    this.appendMenu();
+    this.pane = new ToggleElement(document.createElement('DIV'))
+    this.pane.element.className = 'pane'
+    this.pane.show()
+    this.element.appendChild(this.pane.element)
+    this.appendMenu()
     storage.get('imagej-configuration', (error, data) => {
-      if (error) return;
+      if (error) return
       if (data) {
-        this._configuration.path = (typeof data.path == 'string') ? data.path : undefined;
-        this._configuration.memory = (data.memory > 0) ? data.memory : this.maxMemory;
-        this._configuration.stackMemory = (data.stackMemory > 0) ? data.stackMemory : this.maxStackMemory;
+        this._configuration.path = (typeof data.path == 'string') ? data.path : undefined
+        this._configuration.memory = (data.memory > 0) ? data.memory : this.maxMemory
+        this._configuration.stackMemory = (data.stackMemory > 0) ? data.stackMemory : this.maxStackMemory
       }
       if (!(typeof this._configuration.path === 'string')) {
         dialog.showMessageBox({
@@ -185,27 +191,27 @@ class ImageJExtension extends GuiExtension {
           buttons: ['Now', 'Later'],
           cancelId: 1
         }, (id) => {
-          if (id == 1) return;
-          this.configImageJ();
-        });
+          if (id == 1) return
+          this.configImageJ()
+        })
       }
-    });
-    super.activate();
+    })
+    super.activate()
   }
 
   /**
    * Deactivates the extension.
    */
   deactivate() {
-    this.removeMenu();
-    this.element.removeChild(this.pane.element);
+    this.removeMenu()
+    this.element.removeChild(this.pane.element)
   }
 
   /**
    * Shows the extension.
    */
   show() {
-    super.show();
+    super.show()
   }
 
   /**
@@ -215,17 +221,17 @@ class ImageJExtension extends GuiExtension {
     let childProcess = spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`], {
       cwd: this._configuration.path,
       stdio: 'ignore'
-    });
+    })
 
-    util.notifyOS('ImageJ launched.');
+    util.notifyOS('ImageJ launched.')
 
     childProcess.on('error', (error) => {
-      util.notifyOS(`ImageJ exec error: ${error}`);
-    });
+      util.notifyOS(`ImageJ exec error: ${error}`)
+    })
 
     childProcess.on('close', (code) => {
-      this.gui.notify('ImageJ closed');
-    });
+      this.gui.notify('ImageJ closed')
+    })
   }
 
   /**
@@ -234,9 +240,9 @@ class ImageJExtension extends GuiExtension {
    * @param {string} args Arguments needed by the macro.
    */
   run(macro, args) {
-    return spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`, `-batchpath`, path.join(__dirname, "macros", `${macro}.ijm`), `${args}`], {
+    return spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`, `-batchpath`, path.join(this._macrosPath, `${macro}.ijm`), `${args}`], {
       cwd: this._configuration.path
-    });
+    })
   }
 
   /**
@@ -247,9 +253,9 @@ class ImageJExtension extends GuiExtension {
    * be used.
    */
   createMap(isMap, isFolder) {
-    let title = 'Choose image';
+    let title = 'Choose image'
     if (isFolder) {
-      title += ' in the left-upper corner';
+      title += ' in the left-upper corner'
     }
 
     dialog.showOpenDialog({
@@ -257,17 +263,17 @@ class ImageJExtension extends GuiExtension {
       type: 'normal'
     }, (filepaths) => {
       if (filepaths) {
-        let details;
+        let details
         if (isMap) {
-          details = `Map: ${path.basename(filepaths[0])}`;
+          details = `Map: ${path.basename(filepaths[0])}`
         } else {
-          details = `Layer: ${path.basename(filepaths[0])}`;
+          details = `Layer: ${path.basename(filepaths[0])}`
         }
-        let mapCreatorTask = new MapCreatorTask(details, isMap, isFolder, this);
-        this.gui.taskManager.addTask(mapCreatorTask);
-        mapCreatorTask.run(filepaths[0]);
+        let mapCreatorTask = new MapCreatorTask(details, isMap, isFolder, this)
+        this.gui.taskManager.addTask(mapCreatorTask)
+        mapCreatorTask.run(filepaths[0])
       }
-    });
+    })
   }
 
   /**
@@ -277,9 +283,9 @@ class ImageJExtension extends GuiExtension {
    * folder, or list of images.
    */
   objectDetection(mode) {
-    let props = ['openFile'];
+    let props = ['openFile']
     if (mode === ImageJUtil.LayersMode.FOLDER) {
-      props = ['openDirectory'];
+      props = ['openDirectory']
     }
     dialog.showOpenDialog({
       title: 'Image object detection',
@@ -287,21 +293,21 @@ class ImageJExtension extends GuiExtension {
       properties: props
     }, (filepaths) => {
       if (filepaths) {
-        let details;
+        let details
         if (mode === ImageJUtil.LayersMode.FOLDER) {
-          details = `Folder: ${path.basename(filepaths[0])}`;
+          details = `Folder: ${path.basename(filepaths[0])}`
         } else {
           if (path.extname(filepaths[0]) === "txt") {
-            details = `File: ${path.basename(filepaths[0])}`;
+            details = `File: ${path.basename(filepaths[0])}`
           } else {
-            details = `Image: ${path.basename(filepaths[0])}`;
+            details = `Image: ${path.basename(filepaths[0])}`
           }
         }
-        let objectDetectionTask = new ObjectDetectionTask(details, mode, this);
-        this.gui.taskManager.addTask(objectDetectionTask);
-        objectDetectionTask.run(filepaths[0]);
+        let objectDetectionTask = new ObjectDetectionTask(details, mode, this)
+        this.gui.taskManager.addTask(objectDetectionTask)
+        objectDetectionTask.run(filepaths[0])
       }
-    });
+    })
   }
 
   /**
@@ -311,9 +317,9 @@ class ImageJExtension extends GuiExtension {
    * folder, or list of images.
    */
   holesDetection(mode) {
-    let props = ['openFile'];
+    let props = ['openFile']
     if (mode === ImageJUtil.LayersMode.FOLDER) {
-      props = ['openDirectory'];
+      props = ['openDirectory']
     }
     dialog.showOpenDialog({
       title: 'Holes detection',
@@ -321,21 +327,21 @@ class ImageJExtension extends GuiExtension {
       properties: props
     }, (filepaths) => {
       if (filepaths) {
-        let details;
+        let details
         if (mode === ImageJUtil.LayersMode.FOLDER) {
-          details = `Folder: ${path.basename(filepaths[0])}`;
+          details = `Folder: ${path.basename(filepaths[0])}`
         } else {
           if (path.extname(filepaths[0]) === "txt") {
-            details = `File: ${path.basename(filepaths[0])}`;
+            details = `File: ${path.basename(filepaths[0])}`
           } else {
-            details = `Image: ${path.basename(filepaths[0])}`;
+            details = `Image: ${path.basename(filepaths[0])}`
           }
         }
-        let holesDetectionTask = new HolesDetectionTask(details, mode, this);
-        this.gui.taskManager.addTask(holesDetectionTask);
-        holesDetectionTask.run(filepaths[0]);
+        let holesDetectionTask = new HolesDetectionTask(details, mode, this)
+        this.gui.taskManager.addTask(holesDetectionTask)
+        holesDetectionTask.run(filepaths[0])
       }
-    });
+    })
   }
 
   /**
@@ -349,21 +355,21 @@ class ImageJExtension extends GuiExtension {
       },
       (filepaths) => {
         if (filepaths) {
-          let details = `Image: ${path.basename(filepaths[0])}`;
-          let cropTask = new CropTask(details, this);
-          this.gui.taskManager.addTask(cropTask);
-          cropTask.run(filepaths[0]);
+          let details = `Image: ${path.basename(filepaths[0])}`
+          let cropTask = new CropTask(details, this)
+          this.gui.taskManager.addTask(cropTask)
+          cropTask.run(filepaths[0])
         }
 
       }
-    );
+    )
   }
 
   /**
    * Opens a modal window for ImageJ memory parameters modification.
    */
   configImageJ() {
-    let body = util.div('cellcontainer');
+    let body = util.div('cellcontainer')
     let mem = input.input({
       parent: body,
       label: 'Memory (MB)',
@@ -374,7 +380,7 @@ class ImageJExtension extends GuiExtension {
       max: this.maxMemory,
       step: 1,
       placeholder: 'memory'
-    });
+    })
     let stmem = input.input({
       parent: body,
       label: 'Stack memory (MB)',
@@ -385,7 +391,7 @@ class ImageJExtension extends GuiExtension {
       max: this.maxStackMemory,
       step: 1,
       placeholder: 'memory'
-    });
+    })
 
     let pt = new FolderSelector('imagejpathselector', {
       text: "Choose ImageJ path",
@@ -394,37 +400,37 @@ class ImageJExtension extends GuiExtension {
       value: this._configuration.path || '',
       icon: 'fa fa-external-link',
       title : 'Select the path to the ij.jar file of the local ImageJ installation'
-    });
-    body.appendChild(pt.element);
-    let img = document.createElement('IMG');
-    img.className = "cell";
-    img.style.float="right";
-    img.src = this.image;
-    img.width = 233; //150;
-    img.height = 47; //30.26;
-    body.appendChild(img);
+    })
+    body.appendChild(pt.element)
+    let img = document.createElement('IMG')
+    img.className = "cell"
+    img.style.float="right"
+    img.src = this.image
+    img.width = 233 //150
+    img.height = 47 //30.26
+    body.appendChild(img)
     new Modal({
       title: `ImageJ configuration`,
       width: '400px',
       height: 'auto',
       body: body,
       oncancel: () => {
-        this.gui.notify('ImageJ configured');
-        this._configuration.memory = mem.value;
-        this._configuration.stackMemory = stmem.value;
-        this._configuration.path = pt.getFolderRoute();
-        storage.set('imagej-configuration', this._configuration);
+        this.gui.notify('ImageJ configured')
+        this._configuration.memory = mem.value
+        this._configuration.stackMemory = stmem.value
+        this._configuration.path = pt.getFolderRoute()
+        storage.set('imagej-configuration', this._configuration)
       },
       onsubmit: () => {
-        this.gui.notify('ImageJ configured');
-        this._configuration.memory = mem.value;
-        this._configuration.stackMemory = stmem.value;
-        this._configuration.path = pt.getFolderRoute();
-        storage.set('imagej-configuration', this._configuration);
+        this.gui.notify('ImageJ configured')
+        this._configuration.memory = mem.value
+        this._configuration.stackMemory = stmem.value
+        this._configuration.path = pt.getFolderRoute()
+        storage.set('imagej-configuration', this._configuration)
       }
-    }).show();
+    }).show()
   }
 
 }
 
-module.exports = ImageJExtension;
+module.exports = ImageJExtension
