@@ -30,7 +30,7 @@ const {
   ButtonsContainer,
   input,
   util
-} =require('electrongui')
+} = require('electrongui')
 const ChildProcess = require('child_process').ChildProcess
 const {
   dialog
@@ -44,9 +44,10 @@ class CropTask extends Task {
     this.imageJExtension = imagejext
     this.macro = "croppingBigSTiched"
     this.childProcess = null
+    this.alerts = alerts
   }
 
-  run(runPath) {
+  run(runPath, cl) {
     super.run()
     this.showModal((modal, params) => {
       let args = `${runPath}#${path.basename(runPath, path.extname(runPath))}#${params.dimTiles}#${params.height}#${params.width}#${params.x}#${params.y}#${params.path}`
@@ -82,17 +83,14 @@ class CropTask extends Task {
         })
 
         promise.then((notification) => {
-          util.notifyOS(notification)
-          //gui.notify(notification)
+          if (typeof cl === 'function') cl(notification)
         })
       })
 
       this.childProcess.on('error', (err) => {
         this.fail(err)
-        util.notifyOS(`Image cropping exec error: ${err}`)
       })
 
-      //gui.notify(`Image cropping task started.`)
       modal.destroy()
     })
   }

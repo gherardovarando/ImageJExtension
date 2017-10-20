@@ -50,7 +50,6 @@ class ObjectDetectionTask extends Task {
   }
 
   run(runPath) {
-    super.run();
     this.showModal((modal, params) => {
       let args = `${this.mode}#${runPath}#${params.rmin}#${params.rmax}#${params.by}#${params.thrMethod}#${params.min}#${params.max}#${params.fraction}#${params.toll}#${params.path}`;
       let layerType = `points`;
@@ -67,7 +66,7 @@ class ObjectDetectionTask extends Task {
       });
 
       this.childProcess.stderr.on('data', (data) => {
-        console.log('stderr: ' + data);
+        this.error('stderr: ' + data)
       });
 
       this.childProcess.on('close', (code) => {
@@ -98,19 +97,15 @@ class ObjectDetectionTask extends Task {
           }
         });
 
-        promise.then((notification) => {
-          util.notifyOS(notification);
-          //gui.notify(notification);
-        });
+        promise.then((notification) => {});
       });
 
       this.childProcess.on('error', (err) => {
         this.fail(err);
-        util.notifyOS(`Object detection exec error: ${err}`);
       });
 
-      //gui.notify(`Object detection task started.`);
       modal.destroy();
+      super.run();
     });
   }
 

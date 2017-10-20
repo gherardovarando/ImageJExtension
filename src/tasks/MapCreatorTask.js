@@ -51,7 +51,6 @@ class MapCreatorTask extends Task {
   }
 
   run(runPath) {
-    super.run()
     this.showModal(runPath, (modal, params) => {
       let use = ""
       let create = ""
@@ -70,7 +69,7 @@ class MapCreatorTask extends Task {
       })
 
       this.childProcess.stderr.on('data', (data) => {
-        console.log('stderr: ' + data)
+        this.error('stderr: ' + data)
       })
 
       this.childProcess.on('close', (code) => {
@@ -90,17 +89,14 @@ class MapCreatorTask extends Task {
           notification = `Map creator task (${this.details}) cancelled.`
           this.cancel()
         }
-        util.notifyOS(notification)
-        //gui.notify(notification)
       })
 
       this.childProcess.on('error', (err) => {
         this.fail(err)
-        util.notifyOS(`Map creator exec error: ${err}`)
       })
-
       //gui.notify(`MapCreator task started.`)
       modal.destroy()
+      super.run()
     })
   }
 
@@ -108,7 +104,6 @@ class MapCreatorTask extends Task {
     if (this.isMap) {
       this.customAction["caption"] = "Load map to workspace"
       this.customAction["onclick"] = () => {
-        //gui.extensions.MapExtension.loadMap(this.jsonFile)
       }
     } else {
       this.customAction["caption"] = "Add layer to a map in workspace"
