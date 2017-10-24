@@ -44,7 +44,6 @@ class CropTask extends Task {
     this.imageJExtension = imagejext
     this.macro = "croppingBigSTiched"
     this.childProcess = null
-    this.alerts = alerts
   }
 
   run(runPath, cl) {
@@ -54,7 +53,7 @@ class CropTask extends Task {
       this.childProcess = this.imageJExtension.run(this.macro, args)
       this.childProcess.stdout.setEncoding('utf8')
       this.childProcess.stdout.on('data', (data) => {
-        console.log(data)
+        //console.log(data)
         let regex = /[0-9]+\/[0-9]+/g
         if (regex.test(data)) {
           let progress = data.split("/")
