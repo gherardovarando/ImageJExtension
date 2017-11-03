@@ -147,12 +147,7 @@ class ImageJUtil {
               grid: true,
               color: 'blue',
               fillColor: 'blue',
-              radius: 5,
-              columns: {
-                x: 0,
-                y: 1,
-                z: 2
-              }
+              radius: 5
             }
           }
           break;
