@@ -25,6 +25,7 @@
   "dependencies": {
     "electrongui": "^0.5.11",
     "image-size": "^0.6.1",
-    "sanitize-filename": "^1.6.1"
+    "sanitize-filename": "^1.6.1",
+    "electron-is-dev": "*"
   }
 }
