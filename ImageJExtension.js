@@ -66,9 +66,9 @@ class ImageJExtension extends GuiExtension {
    * A menu with all capabilities is defined.
    */
   constructor(gui) {
-    super(gui,{
+    super(gui, {
       info: {
-      author: 'Mario Juez (mjuez@fi.upm.es), Gherardo Varando (gherardo.varando@gmail.com)'
+        author: 'Mario Juez (mjuez@fi.upm.es), Gherardo Varando (gherardo.varando@gmail.com)'
       },
       image: path.join(__dirname, "res", "img", "imagej-logo.gif"), //ok now
       menuLabel: 'ImageJ',
@@ -85,28 +85,29 @@ class ImageJExtension extends GuiExtension {
       }, {
         label: 'Create TileLayer',
         submenu: [
-        //   {
-        //   label: "Create map from image",
-        //   click: () => {
-        //     this.createMap(true, false)
-        //   }
-        // }, {
-        //   label: "Create map from folder",
-        //   click: () => {
-        //     this.createMap(true, true)
-        //   }
-        // },
-        {
-          label: "from image",
-          click: () => {
-            this.createMap(false, false)
+          //   {
+          //   label: "Create map from image",
+          //   click: () => {
+          //     this.createMap(true, false)
+          //   }
+          // }, {
+          //   label: "Create map from folder",
+          //   click: () => {
+          //     this.createMap(true, true)
+          //   }
+          // },
+          {
+            label: "from image",
+            click: () => {
+              this.createMap(false, false)
+            }
+          }, {
+            label: "from folder",
+            click: () => {
+              this.createMap(false, true)
+            }
           }
-        }, {
-          label: "from folder",
-          click: () => {
-            this.createMap(false, true)
-          }
-        }]
+        ]
       }, {
         label: 'Object Detection',
         submenu: [{
@@ -153,9 +154,9 @@ class ImageJExtension extends GuiExtension {
         }]
       }]
     })
-    if (isDev){
+    if (isDev) {
       this._macrosPath = path.join(__dirname, 'macros')
-    }else{
+    } else {
       this._macrosPath = path.join(process.resourcesPath, 'macros')
     }
     this.maxMemory = parseInt((os.totalmem() * 0.7) / 1000000)
@@ -223,15 +224,15 @@ class ImageJExtension extends GuiExtension {
       stdio: 'ignore'
     })
 
-    let alert = this.gui.alerts.add('ImageJ open','warning')
+    let alert = this.gui.alerts.add('ImageJ open', 'warning')
 
     childProcess.on('error', (error) => {
-      this.gui.alerts.add(`ImageJ exec error: ${error}`,'error')
+      this.gui.alerts.add(`ImageJ exec error: ${error}`, 'error')
       alert.remove()
     })
 
     childProcess.on('close', (code) => {
-      this.gui.alerts.add('ImageJ closed','success')
+      this.gui.alerts.add('ImageJ closed', 'success')
       alert.remove()
     })
   }
@@ -273,16 +274,16 @@ class ImageJExtension extends GuiExtension {
         }
         let mapCreatorTask = new MapCreatorTask(details, isMap, isFolder, this)
         this.gui.taskManager.addTask(mapCreatorTask)
-        mapCreatorTask.on('fail',(e)=>{
-          this.gui.alerts.add(`Map Creator Task failed, \n ${details} \n ${e.error}`,'danger')
+        mapCreatorTask.on('fail', (e) => {
+          this.gui.alerts.add(`Map Creator Task failed, \n ${details} \n ${e.error}`, 'danger')
         })
-        mapCreatorTask.on('success',()=>{
-          this.gui.alerts.add(`Map Creator Task completed, \n ${details}`,'success')
+        mapCreatorTask.on('success', () => {
+          this.gui.alerts.add(`Map Creator Task completed, \n ${details}`, 'success')
         })
-        mapCreatorTask.on('error',(e)=>{
-          this.gui.alerts.add(`Map Creator Task process error, \n ${details} \n ${e.error}`,'danger')
+        mapCreatorTask.on('error', (e) => {
+          this.gui.alerts.add(`Map Creator Task process error, \n ${details} \n ${e.error}`, 'danger')
         })
-        mapCreatorTask.run(filepaths[0],(e)=>this.gui.alerts.add(e))
+        mapCreatorTask.run(filepaths[0], (e) => this.gui.alerts.add(e))
       }
     })
   }
@@ -315,14 +316,14 @@ class ImageJExtension extends GuiExtension {
           }
         }
         let objectDetectionTask = new ObjectDetectionTask(details, mode, this)
-        objectDetectionTask.on('fail',(e)=>{
-          this.gui.alerts.add(`Object Detection Task failed, \n ${details} \n ${e.error}`,'danger')
+        objectDetectionTask.on('fail', (e) => {
+          this.gui.alerts.add(`Object Detection Task failed, \n ${details} \n ${e.error}`, 'danger')
         })
-        objectDetectionTask.on('success',()=>{
-          this.gui.alerts.add(`Object Detection Task completed, \n ${details}`,'success')
+        objectDetectionTask.on('success', () => {
+          this.gui.alerts.add(`Object Detection Task completed, \n ${details}`, 'success')
         })
-        objectDetectionTask.on('error',(e)=>{
-          this.gui.alerts.add(`Object Detection Task process error, \n ${details} \n ${e.error}`,'danger')
+        objectDetectionTask.on('error', (e) => {
+          this.gui.alerts.add(`Object Detection Task process error, \n ${details} \n ${e.error}`, 'danger')
         })
         this.gui.taskManager.addTask(objectDetectionTask)
         objectDetectionTask.run(filepaths[0])
@@ -358,14 +359,14 @@ class ImageJExtension extends GuiExtension {
           }
         }
         let holesDetectionTask = new HolesDetectionTask(details, mode, this)
-        holesDetectionTask.on('fail',(e)=>{
-          this.gui.alerts.add(`Holes Detection Task failed, \n ${details} \n ${e.error}`,'danger')
+        holesDetectionTask.on('fail', (e) => {
+          this.gui.alerts.add(`Holes Detection Task failed, \n ${details} \n ${e.error}`, 'danger')
         })
-        holesDetectionTask.on('success',()=>{
-          this.gui.alerts.add(`Holes Detection Task completed, \n ${details}`,'success')
+        holesDetectionTask.on('success', () => {
+          this.gui.alerts.add(`Holes Detection Task completed, \n ${details}`, 'success')
         })
-        holesDetectionTask.on('error',(e)=>{
-          this.gui.alerts.add(`Holes Detection Task process error, \n ${details} \n ${e.error}`,'danger')
+        holesDetectionTask.on('error', (e) => {
+          this.gui.alerts.add(`Holes Detection Task process error, \n ${details} \n ${e.error}`, 'danger')
         })
         this.gui.taskManager.addTask(holesDetectionTask)
         holesDetectionTask.run(filepaths[0])
@@ -386,14 +387,14 @@ class ImageJExtension extends GuiExtension {
         if (filepaths) {
           let details = `Image: ${path.basename(filepaths[0])}`
           let cropTask = new CropTask(details, this)
-          cropTask.on('fail',(e)=>{
-            this.gui.alerts.add(`Crop Task failed, \n ${details} \n ${e.error}`,'danger')
+          cropTask.on('fail', (e) => {
+            this.gui.alerts.add(`Crop Task failed, \n ${details} \n ${e.error}`, 'danger')
           })
-          cropTask.on('success',()=>{
-            this.gui.alerts.add(`Crop Detection Task completed, \n ${details}`,'success')
+          cropTask.on('success', () => {
+            this.gui.alerts.add(`Crop Detection Task completed, \n ${details}`, 'success')
           })
-          cropTask.on('error',(e)=>{
-            this.gui.alerts.add(`Crop Detection Task process error, \n ${details} \n ${e.error}`,'danger')
+          cropTask.on('error', (e) => {
+            this.gui.alerts.add(`Crop Detection Task process error, \n ${details} \n ${e.error}`, 'danger')
           })
           this.gui.taskManager.addTask(cropTask)
           cropTask.run(filepaths[0])
@@ -434,15 +435,15 @@ class ImageJExtension extends GuiExtension {
     let pt = new FolderSelector('imagejpathselector', {
       text: "Choose ImageJ path",
       className: 'cell',
-      label: this._configuration.path || 'path' ,
+      label: this._configuration.path || 'path',
       value: this._configuration.path || '',
       icon: 'fa fa-external-link',
-      title : 'Select the path to the ij.jar file of the local ImageJ installation'
+      title: 'Select the path to the ij.jar file of the local ImageJ installation'
     })
     body.appendChild(pt.element)
     let img = document.createElement('IMG')
     img.className = "cell"
-    img.style.float="right"
+    img.style.float = "right"
     img.src = this.image
     img.width = 233 //150
     img.height = 47 //30.26
@@ -453,18 +454,22 @@ class ImageJExtension extends GuiExtension {
       height: 'auto',
       body: body,
       oncancel: () => {
-        this.gui.alerts.add('ImageJ configured','success')
+        this.gui.alerts.add('ImageJ configured', 'success')
         this._configuration.memory = mem.value
         this._configuration.stackMemory = stmem.value
         this._configuration.path = pt.getFolderRoute()
-        storage.set('imagej-configuration', this._configuration)
+        storage.set('imagej-configuration', this._configuration, (err) => {
+          this.gui.alerts.add('Error saving ImageJ options', 'warning')
+        })
       },
       onsubmit: () => {
-        this.gui.alerts.add('ImageJ configured','success')
+        this.gui.alerts.add('ImageJ configured', 'success')
         this._configuration.memory = mem.value
         this._configuration.stackMemory = stmem.value
         this._configuration.path = pt.getFolderRoute()
-        storage.set('imagej-configuration', this._configuration)
+        storage.set('imagej-configuration', this._configuration, (err) => {
+          this.gui.alerts.add('Error saving ImageJ options', 'warning')
+        })
       }
     }).show()
   }
