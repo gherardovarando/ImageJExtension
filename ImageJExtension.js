@@ -235,11 +235,12 @@ class ImageJExtension extends GuiExtension {
           type: 'info',
           title: 'ImageJ need to be configured',
           message: 'The ImageJ seems not to be linked to the application, please ensure to have imageJ installed in your computer and configure it',
-          buttons: ['Now', 'Later'],
-          cancelId: 1
+          buttons: ['Quick-Auto install', 'Manual', 'Later'],
+          cancelId: 2
         }, (id) => {
-          if (id == 1) return
-          this.configImageJ()
+          if (id == 2) return
+          if (id == 1) this.configImageJ()
+          if (id === 0) this._quickInstall()
         })
       }
     })
@@ -510,8 +511,9 @@ class ImageJExtension extends GuiExtension {
    */
   checkImageJ() {
     if (!this._configuration.path) return false
+    let files = []
     try {
-      let files = fs.readdirSync(this._configuration.path)
+      files = fs.readdirSync(this._configuration.path)
     } catch (e) {
       return false
     }

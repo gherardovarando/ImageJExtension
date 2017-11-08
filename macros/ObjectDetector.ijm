@@ -33,8 +33,6 @@ File.makeDirectory(outFolderO);
 run("Input/Output...", "file=.csv");
 
 
-setBatchMode(true);
-
 if(mode == FOLDER){
     list = getFileList(path);
     files = newArray();
