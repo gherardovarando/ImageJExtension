@@ -112,19 +112,19 @@ class ImageJExtension extends GuiExtension {
           click: () => {
             this.configImageJ()
           }
-        },{
+        }, {
           label: 'Install ImageJ',
-          click: ()=>{
+          click: () => {
             dialog.showOpenDialog({
               title: 'Select where to install ImageJ',
-              properties : ['openDirectory','createDirectory']
-            },(phs)=>{
-               this.installImageJ(phs[0])
+              properties: ['openDirectory', 'createDirectory']
+            }, (phs) => {
+              this.installImageJ(phs[0])
             })
           }
-        },{
+        }, {
           label: 'Download needed plugins',
-          click: ()=>{
+          click: () => {
             this._downloadAllPlugin()
           }
         }]
@@ -459,7 +459,7 @@ class ImageJExtension extends GuiExtension {
   }
 
 
-  installImageJ(dir) {
+  installImageJ(dir, cl) {
     let {
       app
     } = require('electron').remote
@@ -481,6 +481,7 @@ class ImageJExtension extends GuiExtension {
           } else {
             this.gui.alerts.add(`ImageJ installed`, 'success')
             this._configuration.path = path.join(dir, 'ImageJ')
+            if (typeof cl === 'function') cl(path.join(dir, 'ImageJ'))
             storage.set('imagej-configuration', this._configuration, (err) => {
               if (err) this.gui.alerts.add('Error saving ImageJ options', 'warning')
               if (!this.checkImageJ()) this.gui.alerts.add('The selected folder does not contain an imagej installation', 'warning')
@@ -490,6 +491,16 @@ class ImageJExtension extends GuiExtension {
         })
       })
     })
+  }
+
+  _quickInstall() {
+    let {
+      app
+    } = require('electron').remote
+    this.installImageJ(app.getPath('home'), () => {
+      this._downloadAllPlugin()
+    })
+
   }
 
   /**
