@@ -499,7 +499,11 @@ class ImageJExtension extends GuiExtension {
    */
   checkImageJ() {
     if (!this._configuration.path) return false
-    let files = fs.readdirSync(this._configuration.path)
+    try {
+      let files = fs.readdirSync(this._configuration.path)
+    } catch (e) {
+      return false
+    }
     if (!files.includes('ij.jar')) return false
     return fs.statSync(path.join(this._configuration.path, 'ij.jar')).isFile()
   }
