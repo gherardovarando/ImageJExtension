@@ -55,7 +55,30 @@ const {
   CropTask
 } = require(path.join(__dirname, 'src', 'ImageJTasks'))
 const ImageJUtil = require(path.join(__dirname, 'src', 'ImageJUtil'))
+const request = require('request')
 
+let plugins = {
+  maptool: {
+    filename: 'Map_tool-1.0.0.jar',
+    url: 'http://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.0.0/Map_tool-1.0.0.jar',
+    name: ' Map_tool'
+  },
+  objcount: {
+    name: 'ObjCounter',
+    url: 'https://github.com/ComputationalIntelligenceGroup/ObjCounter/releases/download/v0.01/_ObjCounter-0.0.1-SNAPSHOT.jar',
+    filename: '_ObjCounter-0.0.1.jar'
+  },
+  maxlogs: {
+    name: 'MaxLoGs',
+    url: 'https://github.com/ComputationalIntelligenceGroup/MaxLoGs/releases/download/v0.0.1/Max_LoGs-0.0.1-SNAPSHOT.jar',
+    filename: 'Max_LoGs-0.0.1.jar'
+  },
+  stackjoin: {
+    name: 'StackJoin',
+    url: 'https://github.com/ComputationalIntelligenceGroup/stackJoin/releases/download/v0.0.1/StackJoin_-0.0.1-SNAPSHOT.jar',
+    filename: 'StackJoin_-0.0.1.jar'
+  }
+}
 /**
  * ImageJ extension.
  */
@@ -219,6 +242,10 @@ class ImageJExtension extends GuiExtension {
    * Launchs a ImageJ instance with configured memory parameters.
    */
   launchImageJ() {
+    if (!this.checkImageJ()) {
+      this.gui.alerts.add('You need to install ImageJ and configure the extension', 'warning')
+      return
+    }
     let childProcess = spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`], {
       cwd: this._configuration.path,
       stdio: 'ignore'
@@ -243,6 +270,10 @@ class ImageJExtension extends GuiExtension {
    * @param {string} args Arguments needed by the macro.
    */
   run(macro, args) {
+    if (!this.checkImageJ()) {
+      this.gui.alerts.add('You need to install ImageJ and configure the extension', 'warning')
+      return
+    }
     return spawn('java', [`-Xmx${this._configuration.memory}m`, `-Xss${this._configuration.stackMemory}m`, `-jar`, `ij.jar`, `-batchpath`, path.join(this._macrosPath, `${macro}.ijm`), `${args}`], {
       cwd: this._configuration.path
     })
@@ -405,6 +436,67 @@ class ImageJExtension extends GuiExtension {
   }
 
   /**
+   * check if the linked folder is a valid imagej installation, actually just check the ij.jar file
+   * WE SHOULD ALSO CHECK IF JAVA IS INSTALLED IN THE SYSTEM
+   * @return {[type]} [description]
+   */
+  checkImageJ() {
+    if (!this._configuration.path) return false
+    let files = fs.readdirSync(this._configuration.path)
+    if (!files.includes('ij.jar')) return false
+    return fs.statSync(path.join(this._configuration.path, 'ij.jar')).isFile()
+  }
+
+  _downloadAllPlugin(){
+    Object.keys(plugins).map((p)=>{
+      this.downloadPlugin(plugins[p].url,plugins[p].filename)
+    })
+  }
+
+  /**
+   * Check if there is the plugin folder otherwise create it, then pass the path to a callback
+   * @param  {[type]} cl    callback, cl(dir)
+   * @param  {[type]} errcl error callback
+   */
+  _pluginDir(cl, errcl) {
+    if (!this.checkImageJ()) {
+      if (typeof errcl === 'function') errcl()
+      return
+    }
+    fs.readdir(this._configuration.path, (err, files) => {
+      if (err) return
+      if (files.includes('plugins')) {
+        fs.stat(path.join(this._configuration.path, 'plugins'), (err1, stats) => {
+          if (err1) return
+          if (typeof cl === 'function' && stats.isDirectory()) cl(path.join(this._configuration.path, 'plugins'))
+        })
+      } else {
+        fs.mkdir(path.join(this._configuration.path, 'plugins'), (err) => {
+          if (err) return
+          else if (typeof cl === 'function') cl(path.join(this._configuration.path, 'plugins'))
+        })
+      }
+    })
+  }
+
+  downloadPlugin(url, name) {
+    this._pluginDir((dir) => {
+      let filepath = path.join(dir, name)
+      let file = fs.createWriteStream(filepath)
+      let alert = this.gui.alerts.add(`Downloading plugin ${name}...`, 'progress')
+      request(url).pipe(file)
+      file.on('finish', () => {
+        alert.setBodyText('file downloaded')
+        file.close(() => {
+          alert.remove()
+          this.gui.alerts.add(`Plugins installed in ImageJ \n reload ImageJ if it is open`, 'success')
+        })
+      })
+    })
+
+  }
+
+  /**
    * Opens a modal window for ImageJ memory parameters modification.
    */
   configImageJ() {
@@ -440,6 +532,7 @@ class ImageJExtension extends GuiExtension {
       icon: 'fa fa-external-link',
       title: 'Select the path to the ij.jar file of the local ImageJ installation'
     })
+
     body.appendChild(pt.element)
     let img = document.createElement('IMG')
     img.className = "cell"
@@ -454,21 +547,23 @@ class ImageJExtension extends GuiExtension {
       height: 'auto',
       body: body,
       oncancel: () => {
-        this.gui.alerts.add('ImageJ configured', 'success')
         this._configuration.memory = mem.value
         this._configuration.stackMemory = stmem.value
         this._configuration.path = pt.getFolderRoute()
         storage.set('imagej-configuration', this._configuration, (err) => {
           if (err) this.gui.alerts.add('Error saving ImageJ options', 'warning')
+          if (!this.checkImageJ()) this.gui.alerts.add('The selected folder does not contain an imagej installation', 'warning')
+          else this.gui.alerts.add('ImageJ configured', 'success')
         })
       },
       onsubmit: () => {
-        this.gui.alerts.add('ImageJ configured', 'success')
         this._configuration.memory = mem.value
         this._configuration.stackMemory = stmem.value
         this._configuration.path = pt.getFolderRoute()
         storage.set('imagej-configuration', this._configuration, (err) => {
           if (err) this.gui.alerts.add('Error saving ImageJ options', 'warning')
+          if (!this.checkImageJ()) this.gui.alerts.add('The selected folder does not contain an imagej installation', 'warning')
+          else this.gui.alerts.add('ImageJ configured', 'success')
         })
       }
     }).show()
