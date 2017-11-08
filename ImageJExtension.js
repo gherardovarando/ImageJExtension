@@ -459,7 +459,7 @@ class ImageJExtension extends GuiExtension {
         this._configuration.stackMemory = stmem.value
         this._configuration.path = pt.getFolderRoute()
         storage.set('imagej-configuration', this._configuration, (err) => {
-          this.gui.alerts.add('Error saving ImageJ options', 'warning')
+          if (err) this.gui.alerts.add('Error saving ImageJ options', 'warning')
         })
       },
       onsubmit: () => {
@@ -468,7 +468,7 @@ class ImageJExtension extends GuiExtension {
         this._configuration.stackMemory = stmem.value
         this._configuration.path = pt.getFolderRoute()
         storage.set('imagej-configuration', this._configuration, (err) => {
-          this.gui.alerts.add('Error saving ImageJ options', 'warning')
+          if (err) this.gui.alerts.add('Error saving ImageJ options', 'warning')
         })
       }
     }).show()
