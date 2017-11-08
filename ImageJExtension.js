@@ -61,7 +61,11 @@ let plugins = {
   maptool: {
     filename: 'Map_tool-1.0.0.jar',
     url: 'http://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.0.0/Map_tool-1.0.0.jar',
-    name: ' Map_tool'
+    name: 'Map_tool',
+    lib: {
+      url: 'https://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.0.0/json-simple-1.1.1.jar',
+      filename: 'json-simple-1.1.1.jar'
+    }
   },
   objcount: {
     name: 'ObjCounter',
@@ -524,6 +528,9 @@ class ImageJExtension extends GuiExtension {
   _downloadAllPlugin() {
     Object.keys(plugins).map((p) => {
       this.downloadPlugin(plugins[p].url, plugins[p].filename)
+      if (plugins[p].lib) {
+        this._downloadLib(plugins[p].lib.url, plugins[p].lib.filename)
+      }
     })
   }
 
@@ -550,6 +557,38 @@ class ImageJExtension extends GuiExtension {
           else if (typeof cl === 'function') cl(path.join(this._configuration.path, 'plugins'))
         })
       }
+    })
+  }
+
+  _libDir(cl, errcl) {
+    this._pluginDir((plugindir) => {
+      fs.readdir(plugindir, (err, files) => {
+        if (err) return
+        if (files.includes('lib')) {
+          if (typeof cl === 'function') cl(path.join(plugindir, 'lib'))
+        } else {
+          fs.mkdir(path.join(plugindir, 'lib'), (err) => {
+            if (err) return
+            else if (typeof cl === 'function') cl(path.join(plugindir, 'lib'))
+          })
+        }
+      })
+    }, errcl)
+  }
+
+  _downloadLib(url, name) {
+    this._libDir((dir) => {
+      let filepath = path.join(dir, name)
+      let file = fs.createWriteStream(filepath)
+      let alert = this.gui.alerts.add(`Downloading lib ${name}...`, 'progress')
+      request(url).pipe(file)
+      file.on('finish', () => {
+        alert.setBodyText('file downloaded')
+        file.close(() => {
+          alert.remove()
+          this.gui.alerts.add(`Lib installed`, 'success')
+        })
+      })
     })
   }
 
