@@ -77,6 +77,11 @@ let plugins = {
     name: 'StackJoin',
     url: 'https://github.com/ComputationalIntelligenceGroup/stackJoin/releases/download/v0.0.1/StackJoin_-0.0.1-SNAPSHOT.jar',
     filename: 'StackJoin_-0.0.1.jar'
+  },
+  bioformats: {
+    name: 'Bio-Formats',
+    url: 'https://downloads.openmicroscopy.org/bio-formats/5.7.1/artifacts/bioformats_package.jar',
+    filename: 'bioformats_package.jar'
   }
 }
 /**
@@ -102,9 +107,27 @@ class ImageJExtension extends GuiExtension {
         }
       }, {
         label: 'Configure ImageJ',
-        click: () => {
-          this.configImageJ()
-        }
+        submenu: [{
+          label: 'Settings',
+          click: () => {
+            this.configImageJ()
+          }
+        },{
+          label: 'Install ImageJ',
+          click: ()=>{
+            dialog.showOpenDialog({
+              title: 'Select where to install ImageJ',
+              properties : ['openDirectory','createDirectory']
+            },(phs)=>{
+               this.installImageJ(phs[0])
+            })
+          }
+        },{
+          label: 'Download needed plugins',
+          click: ()=>{
+            this._downloadAllPlugin()
+          }
+        }]
       }, {
         label: 'Create TileLayer',
         submenu: [
@@ -207,7 +230,7 @@ class ImageJExtension extends GuiExtension {
         this._configuration.memory = (data.memory > 0) ? data.memory : this.maxMemory
         this._configuration.stackMemory = (data.stackMemory > 0) ? data.stackMemory : this.maxStackMemory
       }
-      if (!(typeof this._configuration.path === 'string')) {
+      if (!this.checkImageJ()) {
         dialog.showMessageBox({
           type: 'info',
           title: 'ImageJ need to be configured',
@@ -435,6 +458,40 @@ class ImageJExtension extends GuiExtension {
     )
   }
 
+
+  installImageJ(dir) {
+    let {
+      app
+    } = require('electron').remote
+    let extract = require('extract-zip')
+    if (!dir) dir = app.getPath('appData')
+    let filepath = path.join(dir, 'ij150.zip')
+    let file = fs.createWriteStream(filepath)
+    let alert = this.gui.alerts.add(`Downloading ij150.zip...`, 'progress')
+    request('http://wsr.imagej.net/distros/cross-platform/ij150.zip').pipe(file)
+    file.on('finish', () => {
+      alert.setBodyText('ij150.zip downloaded...now unzipping')
+      file.close(() => {
+        extract(filepath, {
+          dir: dir
+        }, (err) => {
+          alert.remove()
+          if (err) {
+            this.gui.alerts.add(`Error unzipping ij150.zip \n ${err.message}`, 'danger')
+          } else {
+            this.gui.alerts.add(`ImageJ installed`, 'success')
+            this._configuration.path = path.join(dir, 'ImageJ')
+            storage.set('imagej-configuration', this._configuration, (err) => {
+              if (err) this.gui.alerts.add('Error saving ImageJ options', 'warning')
+              if (!this.checkImageJ()) this.gui.alerts.add('The selected folder does not contain an imagej installation', 'warning')
+              else this.gui.alerts.add('ImageJ configured', 'success')
+            })
+          }
+        })
+      })
+    })
+  }
+
   /**
    * check if the linked folder is a valid imagej installation, actually just check the ij.jar file
    * WE SHOULD ALSO CHECK IF JAVA IS INSTALLED IN THE SYSTEM
@@ -447,9 +504,9 @@ class ImageJExtension extends GuiExtension {
     return fs.statSync(path.join(this._configuration.path, 'ij.jar')).isFile()
   }
 
-  _downloadAllPlugin(){
-    Object.keys(plugins).map((p)=>{
-      this.downloadPlugin(plugins[p].url,plugins[p].filename)
+  _downloadAllPlugin() {
+    Object.keys(plugins).map((p) => {
+      this.downloadPlugin(plugins[p].url, plugins[p].filename)
     })
   }
 

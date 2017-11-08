@@ -64,8 +64,7 @@ print("_DONE_");
 
 
 function detectObjects(imagePath){
-    run("Bio-Formats", "open=["+imagePath+"] color_mode=Default stack_order=Default");
-    //open(image);
+    open(imagePath);
     width=getWidth();
     height=getHeight();
     nslice=nSlices();
