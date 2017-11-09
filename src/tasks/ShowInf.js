@@ -56,17 +56,12 @@ class ShowInfTask extends Task {
             this.emit('message', {
                 data: data
             })
-            if (/Series #\d+/.test(data)) {
-                let si = parseInt(/\d+/.exec(data)[0])
-                this.info = {}
-                this.info.width = parseInt(/\d+/.exec(/Width = \d+/.exec(data)))
-                this.info.height = parseInt(/\d+/.exec(/Height = \d+/.exec(data)))
-                this.info.sizeZ = parseInt(/\d+/.exec(/SizeZ = \d+/.exec(data)))
-                this.info.sizeT = parseInt(/\d+/.exec(/SizeT = \d+/.exec(data)))
-                this.info.sizeC = parseInt(/\d+/.exec(/SizeC = \d+/.exec(data)))
-                this.info.dim = [this.info.width, this.info.height, this.info.sizeZ, this.info.sizeT, this.info.sizeC]
-
-            }
+            this.info.width = /Width = \d+/.test(data) ? parseInt(/\d+/.exec(/Width = \d+/.exec(data))) : this.info.width
+            this.info.height = /Height = \d+/.test(data) ? parseInt(/\d+/.exec(/Height = \d+/.exec(data))) : this.info.height
+            this.info.sizeZ = /SizeZ = \d+/.test(data) ? parseInt(/\d+/.exec(/SizeZ = \d+/.exec(data))) : this.info.sizeZ
+            this.info.sizeT = /SizeT = \d+/.test(data) ? parseInt(/\d+/.exec(/SizeT = \d+/.exec(data))) : this.info.sizeT
+            this.info.sizeC = /SizeC = \d+/.test(data) ? parseInt(/\d+/.exec(/SizeC = \d+/.exec(data))) : this.info.sizeC
+            this.info.dim = [this.info.width, this.info.height, this.info.sizeZ, this.info.sizeT, this.info.sizeC]
         })
 
         ch.on('close', (code) => {

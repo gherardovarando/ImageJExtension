@@ -213,7 +213,10 @@ class ImageJExtension extends GuiExtension {
                         dialog.showOpenDialog({
                             title: 'Choose an image'
                         }, (files) => {
-                            this.getInfo(files[0],(info)=>console.log(info))
+                            this.getInfo(files[0], (info) => {
+                                console.log(info)
+                                this.gui.alerts.add(`${JSON.stringify(info)}`)
+                            })
                         })
                     }
                 }]
@@ -504,7 +507,7 @@ class ImageJExtension extends GuiExtension {
         let task = new ConvertTask(input, output)
         let alert
         this.gui.taskManager.addTask(task)
-        task.run(path.join(this._configuration.path,'plugins'))
+        task.run(path.join(this._configuration.path, 'plugins'))
         task.on('error', (e) => {
             this.gui.alerts.add(`Error Bio-Formats converter: ${e.data}`, 'warning')
         })
@@ -526,19 +529,19 @@ class ImageJExtension extends GuiExtension {
     }
 
 
-    getInfo(input, cl, err) {
+    getInfo(input, cl) {
         if (!input) return
         let task = new ShowInfTask(input)
         let alert
         //this.gui.taskManager.addTask(task)
-        task.run(path.join(this._configuration.path,'plugins'))
+        task.run(path.join(this._configuration.path, 'plugins'))
         task.on('error', (e) => {
             this.gui.alerts.add(`Error Bio-Formats ImageInfo: ${e.data}`, 'warning')
         })
         task.on('fail', (e) => {
             if (Alert.is(alert)) alert.remove()
             this.gui.alerts.add(`Failed Bio-Formats ImageInfo: ${e.error}`, 'danger')
-            if (typeof err === 'function') err(e)
+            if (typeof cl === 'function') err(null, e)
         })
         task.on('success', (e) => {
             if (Alert.is(alert)) alert.remove()
