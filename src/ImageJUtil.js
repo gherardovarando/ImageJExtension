@@ -18,11 +18,11 @@
 
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const Tiff = require(path.join(__dirname, 'lib', 'Tiff'));
-const sizeOf = require('image-size');
+const fs = require('fs')
+const path = require('path')
+const os = require('os')
+const Tiff = require(path.join(__dirname, 'lib', 'Tiff'))
+const sizeOf = require('image-size')
 
 /**
  * ImageJ extension utilities.
@@ -40,66 +40,66 @@ class ImageJUtil {
    * @param {function(string)} next - Callback for returning JSON Configuration file path.
    */
   static createJSONConfiguration(sourcePath, destinationPath, mode, layerType, next) {
-    let template;
+    let template
 
     let dimPromise = new Promise((resolveDim, rejectDim) => {
       if (mode === ImageJUtil.LayersMode.FOLDER) {
         fs.readdir(sourcePath, (err, files) => {
-          let aImage;
-          let allStatsPromises = [];
-          let xValues = [];
-          let yValues = [];
+          let aImage
+          let allStatsPromises = []
+          let xValues = []
+          let yValues = []
 
           files.forEach(file => {
             let statPromise = new Promise((resolveStat) => {
               fs.stat(path.join(sourcePath, file), (err, stats) => {
                 if (stats.isFile()) {
-                  let xRegex = /_X[0-9]+/g;
-                  let yRegex = /_Y[0-9]+/g;
+                  let xRegex = /_X[0-9]+/g
+                  let yRegex = /_Y[0-9]+/g
 
-                  let xString = xRegex.exec(file);
-                  let yString = yRegex.exec(file);
+                  let xString = xRegex.exec(file)
+                  let yString = yRegex.exec(file)
 
                   if (xString == null || yString == null) {
-                    resolveStat();
+                    resolveStat()
                   } else {
-                    let xNumRegex = /[0-9]+/g;
-                    let yNumRegex = /[0-9]+/g;
-                    let x = xNumRegex.exec(xString);
-                    let y = yNumRegex.exec(yString);
-                    xValues.push(x);
-                    yValues.push(y);
-                    if (aImage == null) aImage = file;
+                    let xNumRegex = /[0-9]+/g
+                    let yNumRegex = /[0-9]+/g
+                    let x = xNumRegex.exec(xString)
+                    let y = yNumRegex.exec(yString)
+                    xValues.push(x)
+                    yValues.push(y)
+                    if (aImage == null) aImage = file
                     if (template == null) {
-                      let xSplit = file.split(xString);
-                      let tempTemplate = `${xSplit[0]}_X{x}${xSplit[1]}`;
-                      let ySplit = tempTemplate.split(yString);
-                      template = `${ySplit[0]}_Y{y}${ySplit[1]}`;
+                      let xSplit = file.split(xString)
+                      let tempTemplate = `${xSplit[0]}_X{x}${xSplit[1]}`
+                      let ySplit = tempTemplate.split(yString)
+                      template = `${ySplit[0]}_Y{y}${ySplit[1]}`
                     }
-                    resolveStat();
+                    resolveStat()
                   }
                 } else {
-                  resolveStat();
+                  resolveStat()
                 }
               });
             });
-            allStatsPromises.push(statPromise);
+            allStatsPromises.push(statPromise)
           });
 
           Promise.all(allStatsPromises).then(() => {
-            let xMin = Math.min(...xValues);
-            let xMax = Math.max(...xValues);
-            let yMin = Math.min(...yValues);
+            let xMin = Math.min(...xValues)
+            let xMax = Math.max(...xValues)
+            let yMin = Math.min(...yValues)
             let yMax = Math.max(...yValues);
-            let xTiles = xMax - xMin + 1;
-            let yTiles = yMax - yMin + 1;
+            let xTiles = xMax - xMin + 1
+            let yTiles = yMax - yMin + 1
             ImageJUtil.Image.getSize(path.join(sourcePath, aImage), (err, width, height) => {
               if (!err) {
-                let tileSize = Math.max(width, height);
-                let size = Math.max(width * xTiles, height * yTiles);
-                resolveDim([tileSize, size]);
+                let tileSize = Math.max(width, height)
+                let size = Math.max(width * xTiles, height * yTiles)
+                resolveDim([tileSize, size])
               } else {
-                rejectDim(err);
+                rejectDim(err)
               }
             });
           });
@@ -107,27 +107,27 @@ class ImageJUtil {
       } else if (mode === ImageJUtil.LayersMode.SINGLE_IMAGE) {
         ImageJUtil.Image.getSize(sourcePath, (err, width, height) => {
           if (!err) {
-            let tileSize = Math.max(width, height);
-            let size = tileSize;
-            resolveDim([tileSize, size]);
+            let tileSize = Math.max(width, height)
+            let size = tileSize
+            resolveDim([tileSize, size])
           } else {
-            rejectDim(err);
+            rejectDim(err)
           }
         });
       } else if (mode === ImageJUtil.LayersMode.IMAGE_LIST) {
-        resolveDim([256, 256]); // temporary solution (bad sizes).
+        resolveDim([256, 256]) // temporary solution (bad sizes).
       }
-    });
+    })
 
     dimPromise.then((size) => {
-      let filename;
+      let filename
       if (template != null) {
-        filename = template;
+        filename = template
       } else {
-        filename = path.basename(sourcePath);
+        filename = path.basename(sourcePath)
       }
 
-      let jsonConfig = {};
+      let jsonConfig = {}
 
       switch (layerType) {
         case `points`:
@@ -150,7 +150,7 @@ class ImageJUtil {
               radius: 5
             }
           }
-          break;
+          break
 
         case `pixels`:
           jsonConfig = {
@@ -163,11 +163,11 @@ class ImageJUtil {
             norm: size[2] || 1,
             pixelsUrlTemplate: `holes_${filename.replace(/ /g, "_")}.txt`
           }
-          break;
+          break
       }
 
-      next(jsonConfig);
-    });
+      next(jsonConfig)
+    })
   }
 
 }
@@ -195,14 +195,14 @@ ImageJUtil.Image = class {
    */
   static getTotalSlices(imagePath) {
     if (imagePath.endsWith(".tif") || imagePath.endsWith(".tiff")) {
-      let data = fs.readFileSync(imagePath);
+      let data = fs.readFileSync(imagePath)
       let tiffImage = new Tiff({
         buffer: data
-      });
-      return tiffImage.countDirectory();
+      })
+      return tiffImage.countDirectory()
     } else {
       // Only tiff images have more than one slice.
-      return 1;
+      return 1
     }
   }
 
@@ -224,15 +224,15 @@ ImageJUtil.Image = class {
             tiffImage.setDirectory(0);
             next(null, tiffImage.toCanvas().width, tiffImage.toCanvas().height);
           } catch (err) {
-            next(null, 256, 256); // default
+            next(null, 256, 256) // default
           }
         } else {
-          next(err);
+          next(err)
         }
-      });
+      })
     } else {
-      let dim = sizeOf(imagePath);
-      next(null, dim.width, dim.height);
+      let dim = sizeOf(imagePath)
+      next(null, dim.width, dim.height)
     }
   }
 
