@@ -332,7 +332,6 @@ class ImageJExtension extends GuiExtension {
           details = `Layer: ${path.basename(filepaths[0])}`
         }
         let mapCreatorTask = new MapCreatorTask(details, isMap, isFolder, this)
-        this.gui.taskManager.addTask(mapCreatorTask)
         mapCreatorTask.on('fail', (e) => {
           this.gui.alerts.add(`Map Creator Task failed, \n ${details} \n ${e.error}`, 'danger')
         })
@@ -341,6 +340,9 @@ class ImageJExtension extends GuiExtension {
         })
         mapCreatorTask.on('error', (e) => {
           this.gui.alerts.add(`Map Creator Task process error, \n ${details} \n ${e.error}`, 'danger')
+        })
+        mapCreatorTask.on('run',()=>{
+          this.gui.taskManager.addTask(mapCreatorTask)
         })
         mapCreatorTask.run(filepaths[0], (e) => this.gui.alerts.add(e))
       }
@@ -384,7 +386,9 @@ class ImageJExtension extends GuiExtension {
         objectDetectionTask.on('error', (e) => {
           this.gui.alerts.add(`Object Detection Task process error, \n ${details} \n ${e.error}`, 'danger')
         })
-        this.gui.taskManager.addTask(objectDetectionTask)
+        objectDetectionTask.on('run', (e)=>{
+          this.gui.taskManager.addTask(objectDetectionTask)
+        })
         objectDetectionTask.run(filepaths[0])
       }
     })
@@ -427,7 +431,9 @@ class ImageJExtension extends GuiExtension {
         holesDetectionTask.on('error', (e) => {
           this.gui.alerts.add(`Holes Detection Task process error, \n ${details} \n ${e.error}`, 'danger')
         })
-        this.gui.taskManager.addTask(holesDetectionTask)
+        holesDetectionTask.on('run',()=>{
+          this.gui.taskManager.addTask(holesDetectionTask)
+        })
         holesDetectionTask.run(filepaths[0])
       }
     })
@@ -455,7 +461,9 @@ class ImageJExtension extends GuiExtension {
           cropTask.on('error', (e) => {
             this.gui.alerts.add(`Crop Detection Task process error, \n ${details} \n ${e.error}`, 'danger')
           })
-          this.gui.taskManager.addTask(cropTask)
+          cropTask.on('run', ()=>{
+            this.gui.taskManager.addTask(cropTask)
+          })
           cropTask.run(filepaths[0])
         }
 
