@@ -526,7 +526,7 @@ class ImageJExtension extends GuiExtension {
     }
 
 
-    getInfo(input, cl) {
+    getInfo(input, cl, err) {
         if (!input) return
         let task = new ShowInfTask(input)
         let alert
@@ -538,6 +538,7 @@ class ImageJExtension extends GuiExtension {
         task.on('fail', (e) => {
             if (Alert.is(alert)) alert.remove()
             this.gui.alerts.add(`Failed Bio-Formats ImageInfo: ${e.error}`, 'danger')
+            if (typeof err === 'function') err(e)
         })
         task.on('success', (e) => {
             if (Alert.is(alert)) alert.remove()
