@@ -13,8 +13,8 @@ outputPath = argument[4];
 
 outFolderH = outputPath + File.separator + "holes_img";
 File.makeDirectory(outFolderH);
-outFolderHcsv = outputPath + File.separator + "holes_pixels";
-File.makeDirectory(outFolderHcsv);
+//outFolderHcsv = outputPath + File.separator + "holes_pixels";
+//File.makeDirectory(outFolderHcsv);
 
 //setBatchMode(true);
 run("Input/Output...", "file=.txt");
@@ -72,6 +72,6 @@ function detectHoles(imagePath){
     run("8-bit");
     rename("holes_"+titleC);
     save(outFolderH + File.separator + "holes_"+titleC);
-    saveAs("Text Image", outFolderHcsv + File.separator + "holes_"+titleC+".txt");
+    //saveAs("Text Image", outFolderHcsv + File.separator + "holes_"+titleC+".txt");
     close("*");
 }

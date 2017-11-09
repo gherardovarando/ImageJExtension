@@ -18,8 +18,9 @@
 
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
+const os = require('os')
+const fs = require('fs')
+const path = require('path')
 const {
     Task,
     Modal,
@@ -28,13 +29,13 @@ const {
     ButtonsContainer,
     input,
     util
-} = require('electrongui');
-const ChildProcess = require('child_process').ChildProcess;
+} = require('electrongui')
+const ChildProcess = require('child_process').ChildProcess
 const {
     dialog
-} = require('electron').remote;
+} = require('electron').remote
 //const ImageJUtil = require(path.join('..', 'ImageJUtil'));
-const TaskUtils = require('./TaskUtils');
+const TaskUtils = require('./TaskUtils')
 const LayersMode = {
     SINGLE_IMAGE: 0,
     FOLDER: 1,

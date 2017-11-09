@@ -72,18 +72,6 @@ class HolesDetectionTask extends Task {
         let promise = new Promise((resolve) => {
           let notification;
           if (code == 0) {
-            // ImageJUtil.createJSONConfiguration(runPath, params.path, this.mode, layerType, (config) => {
-            //   let jsonPath = `${params.path}${path.sep}holes_pixels${path.sep}${config.name}.json`;
-            //   fs.writeFile(jsonPath, JSON.stringify(config, null, 2), (err) => {
-            //     if (err) {
-            //       notification = `Can't save JSON configuration file! Error: ${err}`;
-            //     } else {
-            //       notification = `Holes detection task (${this.details}) completed`;
-            //       this.jsonFile = jsonPath;
-            //     }
-            //     resolve(notification);
-            //   });
-            // });
             this.success();
           } else if (code == 1) {
             notification = `Holes detection task (${this.details}) failed.`;
