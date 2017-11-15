@@ -222,7 +222,7 @@ class ImageJExtension extends GuiExtension {
                 }]
             }]
         })
-        if (isDev) {
+        if (isDev || this.info.locallyinstalled || this.info.manuallyinstalled) {
             this._macrosPath = path.join(__dirname, 'macros')
         } else {
             this._macrosPath = path.join(process.resourcesPath, 'macros')
