@@ -600,7 +600,7 @@ class ImageJExtension extends GuiExtension {
     let {
       app
     } = require('electron').remote
-    this.installImageJ(app.getPath('home'), () => {
+    this.installImageJ(app.getPath('userData'), () => {
       this._downloadAllPlugin()
     })
 
