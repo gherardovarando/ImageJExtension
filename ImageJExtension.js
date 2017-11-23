@@ -222,11 +222,7 @@ class ImageJExtension extends GuiExtension {
         }]
       }]
     })
-    if (isDev || this.info.locallyinstalled || this.info.manuallyinstalled) {
-      this._macrosPath = path.join(__dirname, 'macros')
-    } else {
-      this._macrosPath = path.join(process.resourcesPath, 'macros')
-    }
+    this._macrosPath = path.join(__dirname, 'macros')
     this.maxMemory = parseInt((os.totalmem() * 0.7) / 1000000)
     this.maxStackMemory = 515
     this.image = path.join(__dirname, "res", "img", "imagej-logo.gif")
