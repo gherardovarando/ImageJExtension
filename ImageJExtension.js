@@ -236,11 +236,7 @@ class ImageJExtension extends GuiExtension {
    * Activates the extension.
    */
   activate() {
-    if (isDev || this.info.locallyinstalled || this.info.manuallyinstalled) {
-      this._macrosPath = path.join(__dirname, 'macros')
-    } else {
-      this._macrosPath = path.join(process.resourcesPath, 'macros')
-    }
+    this._macrosPath = path.join(__dirname, 'macros')
     this.pane = new ToggleElement(document.createElement('DIV'))
     this.pane.element.className = 'pane'
     this.pane.show()
