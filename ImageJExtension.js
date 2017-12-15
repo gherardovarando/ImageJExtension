@@ -62,11 +62,11 @@ const request = require('request')
 
 let plugins = {
   maptool: {
-    filename: 'Map_tool-1.0.0.jar',
-    url: 'http://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.0.0/Map_tool-1.0.0.jar',
+    filename: 'Map_tool-1.1.0.jar',
+    url: 'http://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.1.0/Map_tool-1.1.0.jar',
     name: 'Map_tool',
     lib: {
-      url: 'https://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.0.0/json-simple-1.1.1.jar',
+      url: 'https://github.com/ComputationalIntelligenceGroup/Map_tools/releases/download/v1.1.0/json-simple-1.1.1.jar',
       filename: 'json-simple-1.1.1.jar'
     }
   },
