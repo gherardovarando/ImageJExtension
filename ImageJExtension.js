@@ -82,8 +82,8 @@ let plugins = {
   },
   stackjoin: {
     name: 'StackJoin',
-    url: 'https://github.com/ComputationalIntelligenceGroup/stackJoin/releases/download/v0.0.1/StackJoin_-0.0.1-SNAPSHOT.jar',
-    filename: 'StackJoin_-0.0.1.jar'
+    url: 'https://github.com/ComputationalIntelligenceGroup/stackJoin/releases/download/v0.1.0/StackJoin_-0.1.0.jar',
+    filename: 'StackJoin_-0.1.0.jar'
   },
   bioformats: {
     name: 'Bio-Formats',
