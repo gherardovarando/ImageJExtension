@@ -72,8 +72,8 @@ let plugins = {
   },
   objcount: {
     name: 'ObjCounter',
-    url: 'https://github.com/ComputationalIntelligenceGroup/ObjCounter/releases/download/v0.01/_ObjCounter-0.0.1-SNAPSHOT.jar',
-    filename: '_ObjCounter-0.0.1.jar'
+    url: 'https://github.com/ComputationalIntelligenceGroup/ObjCounter/releases/download/v1.0.0/_ObjCounter-1.0.0.jar',
+    filename: '_ObjCounter-1.0.0.jar'
   },
   maxlogs: {
     name: 'MaxLoGs',
