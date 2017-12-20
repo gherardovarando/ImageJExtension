@@ -1,6 +1,7 @@
 # ImageJExtension
 
-This is an extension for [Atlas](https://github.com/ComputationalIntelligenceGroup/Atlas) application.
+This is an electrongui extension.
+This is an extension for MultiMap application.
 
 It uses ImageJ tool for performing some of the available image processing tasks (see [ImageJ documentation](https://imagej.nih.gov/ij/) for better understanding how this extension deals with this tool).
 

@@ -96,6 +96,6 @@ function detectObjects(imagePath){
     rename(title);
     outputObjects = outFolderO + File.separator+"objects_"+titleC;
     outputPoints = outFolderP + File.separator+"points_"+titleC+".csv";
-    run("ObjCounter",  "silent=true threshold=1 slice="+floor(depth)+" min="+min+" max="+max +" fraction="+fraction+" tolerance="+toll+" export_objects=true export_points=true output_objects="+outputObjects+" output_points="+outputPoints);
+    run("ObjCounter",  "silent=true threshold=1 slice="+floor(depth)+" min="+min+" max="+max +" fraction="+fraction+" tolerance="+toll+" output_objects="+outputObjects+" output_points="+outputPoints);
     close("*");
 }
